@@ -1,0 +1,15 @@
+{
+    "files": [
+        "Database.py",
+        "DirModel.py",
+        "EmptyFileModel.py",
+        "main.py",
+        "qml/App.qml",
+        "qml/Base.qml",
+        "qml/BaseDirSelector.qml",
+        "qml/BaseEditor.qml",
+        "qml/BaseFileSelector.qml",
+        "qml/Projects.qml",
+        "qml/main.qml"
+    ]
+}

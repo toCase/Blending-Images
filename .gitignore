@@ -1,0 +1,6 @@
+.qtcreator/
+.ropeproject/
+__pycache__/
+base.db3
+BlendingImages.pyproject.user
+
