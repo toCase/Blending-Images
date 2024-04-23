@@ -1,0 +1,60 @@
+name: Windows
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:          
+          - os: windows-latest
+            python-version: 3.12
+
+    runs-on: ${{ matrix.os }}
+    container: ${{ matrix.container }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Python
+        if: ${{ !matrix.container }} # Use setup-python only if not in the container
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Upgrade pip (Windows & macOS)
+        if: ${{ !matrix.container }} # Run only if not in the container
+        run: |
+          python -m pip install --upgrade pip
+
+      - name: Install Pyinstaller Dependencies
+        run: |
+          pip install pyinstaller
+
+      - name: Install Package Dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Build Executable
+        run: |
+          pyinstaller app.spec
+
+      - name: Set Execution Permissions (Linux)
+        if: runner.os == 'Linux'
+        run: chmod +x dist/*
+
+      - name: Set Execution Permissions (macOS)
+        if: runner.os == 'macOS'
+        run: chmod +x dist/*
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ runner.os }} Build
+          node-version: 1
+          path: |
+            dist/*
