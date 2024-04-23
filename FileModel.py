@@ -5,6 +5,7 @@
 from PySide6.QtCore import QAbstractListModel, QModelIndex, Qt, Signal, Slot, QDir
 
 from Database import Database
+from misc import FileWorker
 
 
 class FileModel(QAbstractListModel):
@@ -23,6 +24,7 @@ class FileModel(QAbstractListModel):
         self.col4 = Qt.UserRole + 4
 
         self.db = Database("files")
+        self.worker = FileWorker("fm")
 
     @Slot(result=int)
     def rowCount(self, parent=QModelIndex):
@@ -69,7 +71,9 @@ class FileModel(QAbstractListModel):
     @Slot(list, result=bool)
     def save(self, files: list):
         for file in files:
-            d = {'id':0, 'dir':self.dir, 'file':file}
+
+            fw = self.worker.saveFile(file)
+            d = {'id':0, 'dir':self.dir, 'file':fw.get('file_path')}
             res = self.db.file_save(d)
             if res.get('r'):
                 continue
@@ -142,6 +146,7 @@ class FileModel(QAbstractListModel):
         if self.selectedCount > 0:
             for card in self.data_list:
                 if card.get('selected'):
+                    self.worker.delFile(card.get('file'))
                     res = self.db.file_del(card.get('id'))
                     if res.get('r'):
                         continue

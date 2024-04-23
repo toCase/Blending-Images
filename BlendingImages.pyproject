@@ -5,6 +5,7 @@
         "EmptyFileModel.py",
         "FileModel.py",
         "main.py",
+        "misc.py",
         "qml/App.qml",
         "qml/Base.qml",
         "qml/BaseDirSelector.qml",

@@ -18,7 +18,6 @@ import DirModel
 import FileModel
 import EmptyFileModel
 
-
 if __name__ == "__main__":
     app = QGuiApplication(sys.argv)
     engine = QQmlApplicationEngine()

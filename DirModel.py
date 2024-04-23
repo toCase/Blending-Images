@@ -79,8 +79,10 @@ class DirModel(QAbstractListModel):
         '''
         получение элемента модели
         '''
-        card = self.data_list[i]
-        return str(card.get(n))
+        if i < self.rowCount() and self.rowCount() > 0:
+            card = self.data_list[i]
+            return str(card.get(n))
+        return str()
 
     @Slot(str, result=bool)
     def save(self, dir: str):

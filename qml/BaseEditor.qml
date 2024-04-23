@@ -291,8 +291,8 @@ Item {
                     }
                     ComboBox {
                         id: combo_dir
-                        Layout.minimumWidth: implicitWidth
-                        Layout.maximumWidth: implicitWidth
+                        Layout.minimumWidth: 200
+                        Layout.maximumWidth: 200
                         Layout.fillHeight: true
                         model: modelDir
                         textRole: "dir"
