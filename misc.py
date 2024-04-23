@@ -20,9 +20,13 @@ class FileWorker(QObject):
         self.img_width = 76
         self.img_height = 85
 
+
     def saveFile(self, file_path:str):
         file_name = QFileInfo(file_path).fileName()
         new_path = QDir(QDir.toNativeSeparators(self.base_dir.path() + "/" + file_name))
+        if platform.system() == "Windows":
+            new_path = QDir(QDir.toNativeSeparators(self.base_dir.path() + "\\" + file_name))
+
         r = QFile(file_path).copy(new_path.path())
         return {'r':r, 'file_path':new_path.path()}
 
@@ -35,14 +39,15 @@ class FileWorker(QObject):
 
     @Slot(result=str)
     def getPathByURL(self, folder_url: str):
-        return QUrl(folder_url).path()
+        path = QUrl(folder_url).path()
+        if platform.system() == "Windows":
+            path = QUrl(folder_url).path()[1:]
+        return QDir.toNativeSeparators(path)
 
     def getDataDir(self, folder_url: str):
 
         data_list = []
-        dir_path = QUrl(folder_url).path()
-        if platform.os == "windows":
-            dir_path = QUrl(folder_url).path()[1:]
+        dir_path = self.getPathByURL(folder_url)
 
         dir = QDir(dir_path)
         filters = ['*.jpg',]
@@ -50,6 +55,8 @@ class FileWorker(QObject):
 
         for file in files:
             file_name = QDir.toNativeSeparators(dir_path + '/' + file)
+            if platform.system() == "Windows":
+                file_name = QDir.toNativeSeparators(dir_path + '\\' + file)
             img = QImage(file_name)
             if img.width() == self.img_width and img.height() == self.img_height:
 
