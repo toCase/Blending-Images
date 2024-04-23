@@ -29,7 +29,7 @@ class EmptyFileModel(QAbstractListModel):
         card = self.data_list[row]
         if index.isValid():
             if role == self.col1:
-                return card.get('file_name')
+                return self.worker.getUrl(card.get('file_name'))
             if role == self.col2:
                 return card.get('selected')
             if role == self.col3:

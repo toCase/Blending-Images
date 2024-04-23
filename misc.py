@@ -24,9 +24,8 @@ class FileWorker(QObject):
     def saveFile(self, file_path:str):
         file_name = QFileInfo(file_path).fileName()
         new_path = QDir(QDir.toNativeSeparators(self.base_dir.path() + "/" + file_name))
-        if platform.system() == "Windows":
-            new_path = QDir(QDir.toNativeSeparators(self.base_dir.path() + "\\" + file_name))
-
+        # if platform.system() == "Windows":
+        #     new_path = QDir(QDir.toNativeSeparators(self.base_dir.path() + "\\" + file_name))
         r = QFile(file_path).copy(new_path.path())
         return {'r':r, 'file_path':new_path.path()}
 
@@ -36,6 +35,12 @@ class FileWorker(QObject):
 
     def getNameByPath(self, file_path: str):
         return QFileInfo(file_path).fileName()
+
+    @Slot(str, result=QUrl)
+    def getUrl(self, path: str):
+        print(path)
+        print(QUrl().fromLocalFile(path))
+        return QUrl().fromLocalFile(path)
 
     @Slot(result=str)
     def getPathByURL(self, folder_url: str):
