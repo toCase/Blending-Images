@@ -1,3 +1,4 @@
+import platform
 from PySide6.QtCore import QObject, Slot, QUrl, QFile, QFileInfo, QDir
 from PySide6.QtGui import QImage
 
@@ -19,7 +20,6 @@ class FileWorker(QObject):
         self.img_width = 76
         self.img_height = 85
 
-
     def saveFile(self, file_path:str):
         file_name = QFileInfo(file_path).fileName()
         new_path = QDir(QDir.toNativeSeparators(self.base_dir.path() + "/" + file_name))
@@ -38,8 +38,12 @@ class FileWorker(QObject):
         return QUrl(folder_url).path()
 
     def getDataDir(self, folder_url: str):
+
         data_list = []
         dir_path = QUrl(folder_url).path()
+        if platform.os == "windows":
+            dir_path = QUrl(folder_url).path()[1:]
+
         dir = QDir(dir_path)
         filters = ['*.jpg',]
         files = dir.entryList(filters, QDir.Filter.Files)
