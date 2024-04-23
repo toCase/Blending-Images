@@ -6,7 +6,7 @@ files = [
     ('qml/BaseFileSelector.qml', './qml'),
     ('qml/BaseEditor.qml', './qml'),
     ('qml/BaseDirSelector.qml', './qml'),
-    ('qml.Base.qml', './qml'),
+    ('qml/Base.qml', './qml'),
     ('qml/App.qml', './qml'),
 ]
 
