@@ -7,7 +7,16 @@ Item {
     id: file_selector
 
 
+    signal add()
 
+    function load(){
+
+    }
+
+    function onSaved(){
+        internal.load(dir_name.text)
+        info_selected.text = modelEmptyFile.getSelectedCount()
+    }
 
     QtObject{
         id: internal
@@ -41,10 +50,6 @@ Item {
         function unselectAll(){
             modelEmptyFile.unselectAll()
             info_selected.text = modelEmptyFile.getSelectedCount()
-        }
-
-        function add(){
-
         }
     }
 
@@ -90,7 +95,6 @@ Item {
                     text: "..."
 
                     onClicked: folderDialog.open()
-
                 }
             }
         }
@@ -104,7 +108,7 @@ Item {
             Layout.leftMargin: 10
 
             cellWidth: 76 + 20 + 20
-            cellHeight: 85 + 20
+            cellHeight: 85 + 20 + 20
 
             clip: true
 
@@ -112,32 +116,40 @@ Item {
 
             delegate: Rectangle{
 
-                width: grid_files.cellWidth
-                height: grid_files.cellHeight
+                width: grid_files.cellWidth - 20
+                height: grid_files.cellHeight - 20
 
-                // radius: 5
+                radius: 5
 
                 required property string file_name
                 required property bool selected
+                required property bool saved
                 required property int index
 
-                CheckBox {
-                    id: file_select
-                    anchors.left:  parent.left
-                    anchors.leftMargin: 5
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: 20
-                    height: 20
-                    checked: selected
-                }
+                color:
+                    if (saved) {
+                        "#F3ECA5"
+                    } else {
+                        "transparent"
+                    }
+                opacity:
+                    if (saved) {
+                        0.9
+                    } else {
+                        1
+                    }
+
+                border.width: 6
+                border.color:
+                    if (selected) {
+                        "#406684"
+                    } else {
+                        "transparent"
+                    }
 
                 Image {
-                    anchors.right: parent.right
-                    anchors.rightMargin: 5
-                    anchors.top: parent.top
-                    anchors.topMargin: 5
-                    anchors.bottom: parent.bottom
-                    anchors.bottomMargin: 5
+
+                    anchors.centerIn: parent
                     width: 76
                     height: 85
                     source: file_name
@@ -148,15 +160,18 @@ Item {
                     anchors.fill: parent
                     hoverEnabled: true
                     onClicked: {
-                        var check = !file_select.checked
-                        internal.makeCheckIndex(index, check)
+                        internal.makeCheckIndex(index, !selected)
 
                     }
                     onContainsMouseChanged: {
                         if (containsMouse){
-                            parent.color = "lightsteelblue"
+                            parent.border.color = "#793690"
                         } else {
-                            parent.color = "transparent"
+                            if (selected) {
+                                parent.border.color = "#406684"
+                            } else {
+                                parent.border.color = "transparent"
+                            }
                         }
                     }
 
@@ -164,10 +179,11 @@ Item {
 
             }
 
-            highlight: Rectangle {
-                color: "lightsteelblue";
-                // radius: 5
-            }
+            // highlight: Rectangle {
+            //     border.color: "#406684";
+            //     border.width: 6
+            //     radius: 5
+            // }
             highlightMoveDuration: 0
             focus: true
             ScrollBar.vertical: ScrollBar { id:scrollTable }
@@ -278,6 +294,8 @@ Item {
                     Layout.fillHeight: true
 
                     text: "Добавить"
+
+                    onClicked: add()
                 }
             }
         }
@@ -285,7 +303,7 @@ Item {
 
     FolderDialog {
         id: folderDialog
-        currentFolder: StandardPaths.standardLocations(StandardPaths.PicturesLocation)[0]
+        // currentFolder: StandardPaths.standardLocations(StandardPaths.PicturesLocation)[0]
         onAccepted: {
             internal.load(selectedFolder)
         }

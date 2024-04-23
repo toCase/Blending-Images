@@ -3,8 +3,10 @@
 # Модель данных для выбора граф файлов
 # ------------------------------------------
 
-from PySide6.QtCore import QAbstractListModel, QModelIndex, Qt, Slot, QDir, QUrl
+from PySide6.QtCore import QAbstractListModel, QModelIndex, Qt, Slot, QDir, QUrl, QRegularExpression, QRegularExpressionMatch
 from PySide6.QtGui import QImage
+
+from Database import Database
 
 
 class EmptyFileModel(QAbstractListModel):
@@ -23,6 +25,7 @@ class EmptyFileModel(QAbstractListModel):
 
     def __init__(self, parent = None):
         super().__init__(parent)
+        self.db = Database('empty')
 
     @Slot()
     def rowCount(self, parent = QModelIndex):
@@ -64,15 +67,20 @@ class EmptyFileModel(QAbstractListModel):
             file_name = QDir.toNativeSeparators(self.dir_path + "/" + file)
             img = QImage(file_name)
             if img.width() == self.img_width and img.height() == self.img_height:
+
+                #тест на наличие файла в БД
+                re = QRegularExpression("([^\\\/]+)\.[a-zA-Z0-9]+$")
+                match = re.match(file_name)
+                test = self.db.file_test(match.captured(0))
+
                 card = {
                     'file_name':file_name,
                     'selected':False,
-                    'saved':False,
+                    'saved':test,
                 }
 
                 self.data_list.append(card)
-
-
+        self.selectedCount = 0
         self.endResetModel()
 
 
@@ -122,3 +130,12 @@ class EmptyFileModel(QAbstractListModel):
     @Slot(result=str)
     def getFolderName(self):
         return self.dir_path
+
+    @Slot(result=list)
+    def getSelectedList(self):
+        l = []
+        if len(self.data_list) > 0:
+            for card in self.data_list:
+                if card['selected']:
+                    l.append(card['file_name'])
+        return l

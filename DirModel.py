@@ -28,11 +28,12 @@ class DirModel(QAbstractListModel):
         self.base_dir = QDir(QDir.toNativeSeparators(str(self.app_path) + "/Base"))
         # self.data_list = base_dir.entryList(filters=QDir.Filter.Dirs | QDir.Filter.NoDotAndDotDot)
 
-        self.db = Database("dir")
+        self.db = Database("dir")        
         self.loadModel()
 
     # ПЕРЕГРУЗКА ФУНКЦИИ МОДЕЛИ
 
+    @Slot()
     def rowCount(self, parent = QModelIndex):
         return len(self.data_list)
 
@@ -41,9 +42,9 @@ class DirModel(QAbstractListModel):
         card = self.data_list[row]
         if index.isValid():
             if role == self.col1:
-                return card.get('id')
+                return int(card.get('id'))
             if role == self.col2:
-                return card.get('dir')
+                return str(card.get('dir'))
         else:
             return str()
 
@@ -65,11 +66,12 @@ class DirModel(QAbstractListModel):
         '''
         self.beginResetModel()
         self.data_list.clear()
-        data = self.db.directory_get()
-        if data.get('r'):
-            self.data_list = data.get('data')
+        res = self.db.directory_get()
+        if res.get('r'):
+            self.data_list = res.get('data')
         else:
-            self.error.emit(data.get('message'))
+            self.error.emit(res.get('message'))
+        print("DIR LOADED")
         self.endResetModel()
 
     @Slot(int, str, result=str)
@@ -80,8 +82,8 @@ class DirModel(QAbstractListModel):
         card = self.data_list[i]
         return str(card.get(n))
 
-    @Slot(list, result=bool)
-    def save(self, l: list):
+    @Slot(str, result=bool)
+    def save(self, dir: str):
         '''
         сохранение раздела, через лист
         - проверка заполнения
@@ -89,36 +91,36 @@ class DirModel(QAbstractListModel):
             успех - перезагрузка модели
             нет - сигнал ошибки
         '''
-        id = l[0]
-        dir = l[1]
+        id = self.current
         if len(dir) == 0:
             self.error.emit("Пустое название раздела!")
             return False
         else:
-            d = { 'id':l[0], 'dir':l[1]}
-            data = self.db.directory_save(d)
-            if data.get('r'):
+            d = { 'id':id, 'dir':dir}
+            res = self.db.directory_save(d)
+            if res.get('r'):
+                self.current = res.get('id')
                 self.loadModel()
+                self.currentChanged.emit(self.current)
                 return True
             else:
-                self.error.emit(data.get('message'))
+                self.error.emit(res.get('message'))
                 return False
 
-    @Slot(int, result=bool)
-    def delete(self, i: int):
+    @Slot(result=bool)
+    def delete(self):
         '''
         удаление раздела, через идентификатор
         - запрос удаления из БД
             успех - перезагрузка модели
             нет - сигнал ошибки
         '''
-        data = self.db.directory_del(i)
-        if data.get('r'):
+        res = self.db.directory_del(self.current)
+        if res.get('r'):
             self.loadModel()
-            return True
         else:
-            self.error.emit(data.get('message'))
-            return False
+            self.error.emit(res.get('message'))
+        return res.get('r')
 
     @Slot(int)
     def setCurrent(self, i: int):
@@ -129,6 +131,10 @@ class DirModel(QAbstractListModel):
         '''
         self.current = i
         self.currentChanged.emit(i)
+
+    @Slot(result=int)
+    def getCurrent(self):
+        return self.current
 
 
 

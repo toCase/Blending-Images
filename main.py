@@ -15,6 +15,7 @@ from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
 
 import DirModel
+import FileModel
 import EmptyFileModel
 
 
@@ -24,6 +25,9 @@ if __name__ == "__main__":
 
     dirModel = DirModel.DirModel(path = Path(__file__).resolve().parent)
     engine.rootContext().setContextProperty("modelDir", dirModel)
+
+    fileModel = FileModel.FileModel(path = Path(__file__).resolve().parent)
+    engine.rootContext().setContextProperty("modelFile", fileModel)
 
     emptyFileModel = EmptyFileModel.EmptyFileModel()
     engine.rootContext().setContextProperty("modelEmptyFile", emptyFileModel)

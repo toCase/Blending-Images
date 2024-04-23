@@ -7,68 +7,54 @@ Item {
     QtObject {
         id: internal
 
-        property int idx: 0
+        property int current_idx: -1
 
         function add() {
-            idx = 0
+            modelDir.setCurrent(0)
             dir_name.clear()
             but_dir_del.visible = false
             form_directory.visible = true
         }
 
         function edit(i){
-            idx = modelDir.get(i, 'id')
-            dir_name.text = modelDir.get(i, 'dir')
+            modelDir.setCurrent(i)
+            dir_name.text = modelDir.get(current_idx, 'dir')
             but_dir_del.visible = true
             form_directory.visible = true
         }
 
         function del(){
-            var r = modelDir.delete(idx)
+            var r = modelDir.delete()
             if (r){
                 close()
-
-                if (modelDir.rowCount() === 0){
-                    dirSelector.currentIndex = -1
-                    modelDir.setCurrent(-1)
-                } else {
-                    dirSelector.currentIndex = 0
-                    modelDir.setCurrent(0)
-                }
             }
         }
 
         function save(){
-            let l = []
-            l[0] = idx
-            l[1] = dir_name.text
-
-            var r = modelDir.save(l)
+            var r = modelDir.save(dir_name.text)
             if (r){
-                close()
+                current_idx = modelDir.rowCount() - 1
+                dirSelector.currentIndex = current_idx
+                form_directory.visible = false
             }
         }
 
         function close(){
             form_directory.visible = false
+
+            if (modelDir.rowCount() === 0){
+                dirSelector.currentIndex = -1
+                modelDir.setCurrent(-1)
+            } else {
+                dirSelector.currentIndex = 0
+                modelDir.setCurrent(modelDir.get(0, 'id'))
+            }
         }
 
         function select(i){
             modelDir.setCurrent(i)
         }
     }
-
-    Connections{
-        target: modelDir
-        function onError(error){
-            console.log("message", error)
-        }
-
-        function onCurrentChanged(current){
-            console.log("current", current)
-        }
-    }
-
 
     ColumnLayout {
         anchors.fill: parent
@@ -95,32 +81,33 @@ Item {
                     model: modelDir
                     orientation: ListView.Horizontal
                     delegate: Rectangle {
-                        // required property int idx
+                        required property int id
                         required property string dir
-
                         required property int index
 
                         width: dirSelector.width / modelDir.rowCount()
                         height: dirSelector.height
                         color: dirSelector.currentIndex === index ? "#ff6600" : "#707b90"
                         Label{
+                            id: dirSelector_name
                             anchors.centerIn: parent
                             text: dir
-                            color: "#ffffff"//sett.appGetColor(parent.color)
+                            color: "#ffffff"
                             font.family: "Roboto"
                             font.pointSize: 16
                         }
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
-                                // internal.selectSpec(idx)
                                 dirSelector.currentIndex = index
-                                internal.select(index)
+                                internal.current_idx = index
+                                internal.select(id)
                             }
                             onDoubleClicked: {
                                 dirSelector.currentIndex = index
-                                internal.select(index)
-                                internal.edit(index)
+                                internal.current_idx = index
+                                internal.select(id)
+                                internal.edit(id)
                             }
 
                         }
@@ -204,6 +191,11 @@ Item {
         Item {
             Layout.fillHeight: true
         }
+    }
+
+    Component.onCompleted: {
+        grid_main.currentIndex = internal.current_idx
+        modelDir.setCurrent(modelDir.get(0, 'id'))
     }
 
 }
