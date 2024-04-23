@@ -18,9 +18,13 @@ import DirModel
 import FileModel
 import EmptyFileModel
 
+from misc import FileWorker
+
 if __name__ == "__main__":
     app = QGuiApplication(sys.argv)
     engine = QQmlApplicationEngine()
+
+    fw = FileWorker('x')
 
     dirModel = DirModel.DirModel(path = Path(__file__).resolve().parent)
     engine.rootContext().setContextProperty("modelDir", dirModel)
