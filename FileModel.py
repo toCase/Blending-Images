@@ -39,7 +39,7 @@ class FileModel(QAbstractListModel):
             if role == self.col2:
                 return card.get('dir')
             if role == self.col3:
-                return card.get('file')
+                return self.worker.getUrl(card.get('file'))
             if role == self.col4:
                 return card.get('selected')
         else:

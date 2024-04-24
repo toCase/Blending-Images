@@ -46,11 +46,15 @@ class EmptyFileModel(QAbstractListModel):
         }
 
     @Slot(str)
-    def loadModel(self, path:str):
+    def setFolderUrl(self, folder: str):
+        self.folder = folder
+
+    @Slot()
+    def loadModel(self):
         self.beginResetModel()
         self.data_list.clear()
-        self.dir_path = self.worker.getPathByURL(path)
-        self.data_list = self.worker.getDataDir(path)
+        self.dir_path = self.worker.getPathByURL(self.folder)
+        self.data_list = self.worker.getDataDir(self.folder)
         self.selectedCount = 0
         self.endResetModel()
 

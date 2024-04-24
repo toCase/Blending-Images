@@ -9,25 +9,26 @@ Item {
 
     signal add()
 
-    function load(){
 
-    }
 
     function onSaved(){
-        internal.load(dir_name.text)
+        internal.load()
         info_selected.text = modelEmptyFile.getSelectedCount()
     }
 
     QtObject{
         id: internal
 
-        function load(selectedFolder){
+        function setFolder(selectedFolder){
+            modelEmptyFile.setFolderUrl(selectedFolder)
+            load()
+        }
 
-            modelEmptyFile.loadModel(selectedFolder)
+        function load(){
+            modelEmptyFile.loadModel()
             dir_name.text = modelEmptyFile.getFolderName()
             info_all.text = modelEmptyFile.rowCount()
             info_selected.text = modelEmptyFile.getSelectedCount()
-
         }
 
         function makeCheckIndex(i, check){
@@ -305,7 +306,7 @@ Item {
         id: folderDialog
         // currentFolder: StandardPaths.standardLocations(StandardPaths.PicturesLocation)[0]
         onAccepted: {
-            internal.load(selectedFolder)
+            internal.setFolder(selectedFolder)
         }
     }
 }

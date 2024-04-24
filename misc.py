@@ -38,8 +38,6 @@ class FileWorker(QObject):
 
     @Slot(str, result=QUrl)
     def getUrl(self, path: str):
-        print(path)
-        print(QUrl().fromLocalFile(path))
         return QUrl().fromLocalFile(path)
 
     @Slot(result=str)
@@ -52,6 +50,7 @@ class FileWorker(QObject):
     def getDataDir(self, folder_url: str):
 
         data_list = []
+
         dir_path = self.getPathByURL(folder_url)
 
         dir = QDir(dir_path)
