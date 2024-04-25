@@ -66,12 +66,11 @@ class DirModel(QAbstractListModel):
         '''
         self.beginResetModel()
         self.data_list.clear()
-        res = self.db.directory_get()
+        res = self.db.db_get(self.db.TABLE_DIRECTORY)
         if res.get('r'):
             self.data_list = res.get('data')
         else:
             self.error.emit(res.get('message'))
-        print("DIR LOADED")
         self.endResetModel()
 
     @Slot(int, str, result=str)
@@ -99,7 +98,8 @@ class DirModel(QAbstractListModel):
             return False
         else:
             d = { 'id':id, 'dir':dir}
-            res = self.db.directory_save(d)
+            # res = self.db.directory_save(d)
+            res = self.db.db_save(d, self.db.TABLE_DIRECTORY)
             if res.get('r'):
                 self.current = res.get('id')
                 self.loadModel()
@@ -117,7 +117,7 @@ class DirModel(QAbstractListModel):
             успех - перезагрузка модели
             нет - сигнал ошибки
         '''
-        res = self.db.directory_del(self.current)
+        res = self.db.db_del(self.current, self.db.TABLE_DIRECTORY)
         if res.get('r'):
             self.loadModel()
         else:

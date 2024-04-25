@@ -35,11 +35,8 @@ Item {
             var scrollPosition = scrollTable.position
 
             modelEmptyFile.selectItem(i, check)
-
             scrollTable.position = scrollPosition
             grid_files.currentIndex = i
-
-            // console.log(modelEmptyFile.getSelectedCount())
             info_selected.text = modelEmptyFile.getSelectedCount()
         }
 
@@ -304,7 +301,6 @@ Item {
 
     FolderDialog {
         id: folderDialog
-        // currentFolder: StandardPaths.standardLocations(StandardPaths.PicturesLocation)[0]
         onAccepted: {
             internal.setFolder(selectedFolder)
         }

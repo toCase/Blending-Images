@@ -17,6 +17,7 @@ from PySide6.QtQml import QQmlApplicationEngine
 import DirModel
 import FileModel
 import EmptyFileModel
+import ProjectModel
 
 from misc import FileWorker
 
@@ -34,6 +35,9 @@ if __name__ == "__main__":
 
     emptyFileModel = EmptyFileModel.EmptyFileModel()
     engine.rootContext().setContextProperty("modelEmptyFile", emptyFileModel)
+
+    projectModel = ProjectModel.ProjectModel()
+    engine.rootContext().setContextProperty("modelProject", projectModel)
 
     qml_file = Path(__file__).resolve().parent / "qml/main.qml"
     engine.load(qml_file)

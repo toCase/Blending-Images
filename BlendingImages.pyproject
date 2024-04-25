@@ -4,6 +4,7 @@
         "DirModel.py",
         "EmptyFileModel.py",
         "FileModel.py",
+        "ProjectModel.py",
         "main.py",
         "misc.py",
         "qml/App.qml",
@@ -11,6 +12,8 @@
         "qml/BaseDirSelector.qml",
         "qml/BaseEditor.qml",
         "qml/BaseFileSelector.qml",
+        "qml/ProjectCard.qml",
+        "qml/ProjectMain.qml",
         "qml/Projects.qml",
         "qml/main.qml"
     ]

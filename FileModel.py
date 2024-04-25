@@ -59,7 +59,7 @@ class FileModel(QAbstractListModel):
     def loadModel(self):
         self.beginResetModel()
         self.data_list.clear()
-        res = self.db.file_get(self.dir)
+        res = self.db.db_get(self.db.TABLE_FILES, filter=self.dir)
         if res.get('r'):
             self.data_list = res.get('data')
         else:
@@ -74,7 +74,8 @@ class FileModel(QAbstractListModel):
 
             fw = self.worker.saveFile(file)
             d = {'id':0, 'dir':self.dir, 'file':fw.get('file_path')}
-            res = self.db.file_save(d)
+            # res = self.db.file_save(d)
+            res = self.db.db_save(d, self.db.TABLE_FILES)
             if res.get('r'):
                 continue
             else:
@@ -132,7 +133,8 @@ class FileModel(QAbstractListModel):
             for card in self.data_list:
                 if card.get('selected'):
                     card['dir'] = dir
-                    res = self.db.file_save(card)
+                    # res = self.db.file_save(card)
+                    res = self.db.db_save(card, self.db.TABLE_FILES)
                     if res.get('r'):
                         continue
                     else:
@@ -147,7 +149,7 @@ class FileModel(QAbstractListModel):
             for card in self.data_list:
                 if card.get('selected'):
                     self.worker.delFile(card.get('file'))
-                    res = self.db.file_del(card.get('id'))
+                    res = self.db.db_del(id=card.get('id'), table='Files')
                     if res.get('r'):
                         continue
                     else:
