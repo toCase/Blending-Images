@@ -4,6 +4,7 @@ from PySide6.QtGui import QPainter, QColor, QImage, QPageSize
 from PySide6.QtPrintSupport import QPrinter
 from Database import Database
 from misc import FileWorker
+import platform
 
 class CollageModel(QAbstractTableModel):
 
@@ -208,8 +209,13 @@ class CollageModel(QAbstractTableModel):
                 y = r * 85
 
                 if card['displayType']:
+
+                    print(card['display'])
                     img = QImage()
-                    img.load(card['display'])
+                    # if platform.system() == "Windows":
+                    #     img.load(self.fw.getUrl(card['display']))
+                    # else:
+                    img.load(self.fw.getPathByURL(card['display']))
                     painter.drawImage(QPoint(x, y), img)
                 else:
                     rect = QRectF(x, y, 76.0, 85.0)
@@ -218,6 +224,12 @@ class CollageModel(QAbstractTableModel):
 
 
         painter.end()
+
+    @Slot(result=bool)
+    def testWin(self):
+        if platform.system() == "Windows":
+            return True
+        return False
 
 
 
