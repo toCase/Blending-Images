@@ -9,6 +9,7 @@ class Database(QObject):
     TABLE_DIRECTORY = 'Directory'
     TABLE_FILES = 'Files'
     TABLE_PROJECT = 'Projects'
+    TABLE_ITEMS = 'Items'
 
 
     def __init__(self, conn: str, parent = None):
@@ -28,6 +29,7 @@ class Database(QObject):
                 "CREATE TABLE IF NOT EXISTS Files (id INTEGER PRIMARY KEY AUTOINCREMENT, dir INTEGER, file TEXT)",
                 '''CREATE TABLE IF NOT EXISTS Projects (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, width INTEGER,
                 height INTEGER, rows INTEGER, columns INTEGER, file TEXT, bg TEXT, upd INTEGER)''',
+                "CREATE TABLE IF NOT EXISTS Items(id INTEGER PRIMARY KEY AUTOINCREMENT, project INTEGER, row INTEGER, col INTEGER, file INTEGER)",
             ]
             for q in qstr:
                 query = QSqlQuery(q, db)
@@ -42,6 +44,8 @@ class Database(QObject):
             data = []
             if table == self.TABLE_FILES:
                 qstr = f"SELECT * FROM {table} WHERE {table}.dir = \'{filter}\' "
+            elif table == self.TABLE_ITEMS:
+                qstr = f"SELECT * FROM {table} WHERE {table}.project = \'{filter}\' "
             else:
                 qstr = f"SELECT * FROM {table} "
 
@@ -91,6 +95,14 @@ class Database(QObject):
                     query.bindValue(6, card.get('bg'))
                     query.bindValue(7, QDate.currentDate().toJulianDay())
 
+                elif table == self.TABLE_ITEMS:
+                    qstr = "INSERT INTO Items (project, row, col, file) VALUES (?, ?, ?, ?)"
+                    query = QSqlQuery(qstr, db)
+                    query.bindValue(0, card.get('project'))
+                    query.bindValue(1, card.get('row'))
+                    query.bindValue(2, card.get('col'))
+                    query.bindValue(3, card.get('file'))
+
                 r = query.exec()
                 if r:
                     return {'r':r, 'message':'', 'id':int(query.lastInsertId()),}
@@ -109,6 +121,9 @@ class Database(QObject):
                     columns = \'{}\', file = \'{}\', bg = \'{}\' WHERE Projects.id = \'{}\' '''.format(
                         card.get('name'), card.get('width'), card.get('height'), card.get('rows'), card.get('columns'),
                         card.get('file'), card.get('bg'), id)
+                elif table == self.TABLE_ITEMS:
+                    qstr = '''UPDATE Items SET project = \'{}\', row = \'{}\', col = \'{}\', file = \'{}\'
+                    WHERE Items.id = \'{}\' '''.format(card.get('project'), card.get('row'), card.get('col'), card.get('file'), id)
 
                 query = QSqlQuery(qstr, db)
                 r = query.exec()
@@ -122,10 +137,13 @@ class Database(QObject):
 
 
     # удаление данных
-    def db_del(self, id: int, table: str):
+    def db_del(self, id: int, table: str, filter = None):
         db = QSqlDatabase.database(self.connection_name)
         if db.isOpen():
-            qstr = f"DELETE FROM {table} WHERE {table}.id = \'{id}\'"
+            if table == self.TABLE_ITEMS and filter != None:
+                qstr = f"DELETE FROM {table} WHERE {table}.project = \'{filter}\'"
+            else:
+                qstr = f"DELETE FROM {table} WHERE {table}.id = \'{id}\'"
             query = QSqlQuery(qstr, db)
             r = query.exec()
             if r:
@@ -141,7 +159,6 @@ class Database(QObject):
 
 
     # FILES------------------------
-    # @Slot(str, result=bool)
     def file_test(self, file: str):
         db = QSqlDatabase.database(self.connection_name)
         if db.isOpen():
@@ -158,3 +175,12 @@ class Database(QObject):
         else:
             return False
 
+
+    def getFile(self, id:int):
+        db = QSqlDatabase.database(self.connection_name)
+        if db.isOpen():
+            qstr = f"SELECT Files.file FROM Files WHERE Files.id = \'{id}\'"
+            query = QSqlQuery(qstr, db)
+            if query.next():
+                return str(query.value(0))
+        return 0

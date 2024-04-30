@@ -10,6 +10,8 @@ files = [
     ('qml/App.qml', './qml'),
     ('qml/ProjectMain.qml', './qml'),
     ('qml/ProjectCard.qml', './qml'),
+    ('qml/ProjectConstructor.qml', './qml'),
+    ('qml/ProjectPreview.qml', './qml'),
 ]
 
 a = Analysis(

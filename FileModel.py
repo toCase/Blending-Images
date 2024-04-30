@@ -12,10 +12,8 @@ class FileModel(QAbstractListModel):
 
     error = Signal(str, arguments=['error'])
 
-    def __init__(self, path, parent=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
-
-        self.app_path = path
 
         self.data_list = []
         self.col1 = Qt.UserRole + 1
@@ -157,6 +155,28 @@ class FileModel(QAbstractListModel):
                         return False
             self.loadModel()
         return True
+
+    @Slot(int, bool, result=int)
+    def selectItemOne(self, index:int, selected:bool):
+        self.beginResetModel()
+
+        i :int = 0
+        for card in self.data_list:
+            card['selected'] = False
+            self.data_list[i] = card
+            i = i + 1
+
+
+        card = self.data_list[index]
+        card['selected'] = selected
+        self.data_list[index] = card
+
+        self.endResetModel()
+
+        if selected:
+            return card['id']
+        return 0
+
 
 
 

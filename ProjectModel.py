@@ -3,10 +3,7 @@
 # Модель данных для работы с проектами
 # ------------------------------------------
 from PySide6.QtCore import QAbstractListModel, QModelIndex, Qt, Signal, Slot
-# from PySide6.QtGui import QColor
-
 from Database import Database
-
 
 class ProjectModel(QAbstractListModel):
 
@@ -92,10 +89,35 @@ class ProjectModel(QAbstractListModel):
     @Slot(dict, result=bool)
     def save(self, card :dict):
         bg = card['bg']
+
+        # for item's generator
+        rows = int(card['rows'])
+        columns = int(card['columns'])
+
+        if card['id'] > 0:
+            self.db.db_del(0, self.db.TABLE_ITEMS, filter=card['id'])
+
+        #-------
+
         card['bg'] = bg.name()
         res = self.db.db_save(card, self.db.TABLE_PROJECT)
         if res.get('r'):
-            self.loadModel()
+            self.loadModel()            
+            project_id = int(res.get('id'))
+
+            # ITEMS GENERATION
+            for r in range(0, rows, 1):
+                for c in range(0, columns, 1):
+                    d = {
+                        'id': 0,
+                        'project':project_id,
+                        'row':r,
+                        'col':c,
+                        'file':0
+                    }
+                    self.db.db_save(d, self.db.TABLE_ITEMS)
+            #------
+
             return True
         else:
             self.error.emit(res.get('message'))
@@ -105,6 +127,7 @@ class ProjectModel(QAbstractListModel):
     def delete(self):
         res = self.db.db_del(self.currentID, self.db.TABLE_PROJECT)
         if res.get('r'):
+            self.db.db_del(0, self.db.TABLE_ITEMS, self.currentID)
             self.loadModel()
             return True
         else:
@@ -114,10 +137,11 @@ class ProjectModel(QAbstractListModel):
     @Slot(int)
     def setCurrent(self, i: int):
         self.currentID = self.data_list[i].get('id')
-        print("ID: ", self.currentID)
 
     @Slot(int, str, result=str)
     def get(self, index:int, item:str):
         return str(self.data_list[index].get(item))
+
+
 
 

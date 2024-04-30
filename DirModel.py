@@ -17,17 +17,8 @@ class DirModel(QAbstractListModel):
     currentChanged = Signal(int, arguments = ['current'])
     error = Signal(str, arguments=['error'])
 
-    def __init__(self, path, parent = None):
+    def __init__(self, parent = None):
         super().__init__(parent)
-        self.app_path = path
-
-        app_dir = QDir(str(self.app_path))
-        app_dirs = app_dir.entryList(filters=QDir.Filter.Dirs)
-        if "Base" not in app_dirs:
-            app_dir.mkdir("Base")
-        self.base_dir = QDir(QDir.toNativeSeparators(str(self.app_path) + "/Base"))
-        # self.data_list = base_dir.entryList(filters=QDir.Filter.Dirs | QDir.Filter.NoDotAndDotDot)
-
         self.db = Database("dir")        
         self.loadModel()
 

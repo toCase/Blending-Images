@@ -6,6 +6,7 @@ Item {
 
     signal create()
     signal edit(idx:int)
+    signal open(idx:int)
 
 
     QtObject {
@@ -96,7 +97,7 @@ Item {
                         MouseArea {
                             anchors.fill: parent
                             onClicked:internal.selectProject(index)
-                            onDoubleClicked: internal.openProject(index)
+                            onDoubleClicked: open(index)
                         }
 
                     }
@@ -113,8 +114,8 @@ Item {
             }
 
             highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
-            highlightMoveDuration: 10
-            // highlightMoveVelocity: 0
+            highlightMoveDuration: 0
+            highlightMoveVelocity: 10
             focus: true
         }
 

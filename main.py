@@ -18,8 +18,9 @@ import DirModel
 import FileModel
 import EmptyFileModel
 import ProjectModel
+import CollageModel
 
-from misc import FileWorker
+
 
 if __name__ == "__main__":
     app = QGuiApplication(sys.argv)
@@ -27,10 +28,10 @@ if __name__ == "__main__":
 
     # fw = FileWorker('x')
 
-    dirModel = DirModel.DirModel(path = Path(__file__).resolve().parent)
+    dirModel = DirModel.DirModel()
     engine.rootContext().setContextProperty("modelDir", dirModel)
 
-    fileModel = FileModel.FileModel(path = Path(__file__).resolve().parent)
+    fileModel = FileModel.FileModel()
     engine.rootContext().setContextProperty("modelFile", fileModel)
 
     emptyFileModel = EmptyFileModel.EmptyFileModel()
@@ -38,6 +39,12 @@ if __name__ == "__main__":
 
     projectModel = ProjectModel.ProjectModel()
     engine.rootContext().setContextProperty("modelProject", projectModel)
+
+    # projectFileModel = FileModel.FileModel()
+    # engine.rootContext().setContextProperty("modelPF", projectFileModel)
+
+    collageModel = CollageModel.CollageModel()
+    engine.rootContext().setContextProperty("modelCollage", collageModel)
 
     qml_file = Path(__file__).resolve().parent / "qml/main.qml"
     engine.load(qml_file)

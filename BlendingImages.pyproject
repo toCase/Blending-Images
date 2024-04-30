@@ -1,5 +1,6 @@
 {
     "files": [
+        "CollageModel.py",
         "Database.py",
         "DirModel.py",
         "EmptyFileModel.py",
@@ -13,7 +14,9 @@
         "qml/BaseEditor.qml",
         "qml/BaseFileSelector.qml",
         "qml/ProjectCard.qml",
+        "qml/ProjectConstructor.qml",
         "qml/ProjectMain.qml",
+        "qml/ProjectPreview.qml",
         "qml/Projects.qml",
         "qml/main.qml"
     ]
