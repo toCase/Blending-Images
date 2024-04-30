@@ -209,12 +209,7 @@ class CollageModel(QAbstractTableModel):
                 y = r * 85
 
                 if card['displayType']:
-
-                    print(card['display'])
                     img = QImage()
-                    # if platform.system() == "Windows":
-                    #     img.load(self.fw.getUrl(card['display']))
-                    # else:
                     img.load(self.fw.getPathByURL(card['display']))
                     painter.drawImage(QPoint(x, y), img)
                 else:
@@ -224,6 +219,36 @@ class CollageModel(QAbstractTableModel):
 
 
         painter.end()
+
+    @Slot(str)
+    def saveImage(self, fname:str):
+        f = self.fw.getPathByURL(fname)
+
+        # Создание изображения размером, соответствующим вашему проекту
+        image = QImage(self.project_cols * 76, self.project_rows * 85, QImage.Format_RGB32)
+        image.fill(QColor(self.project_bg))  # Заливка фона цветом проекта
+
+        painter = QPainter(image)
+        for r in range(0, self.project_rows):
+            for c in range(0, self.project_cols):
+                card = self.makeCollage(r, c)
+                x = c * 76
+                y = r * 85
+
+                if card['displayType']:
+                    img = QImage()
+                    img.load(self.fw.getPathByURL(card['display']))
+                    painter.drawImage(QPoint(x, y), img)
+                # else:
+                #     rect = QRectF(x, y, 76.0, 85.0)
+                #     painter.drawRect(rect)
+                #     painter.fillRect(rect, QColor(self.project_bg))
+
+        painter.end()
+
+        # Сохранение изображения в формате JPG
+        image.save(f, "JPG")
+
 
     @Slot(result=bool)
     def testWin(self):

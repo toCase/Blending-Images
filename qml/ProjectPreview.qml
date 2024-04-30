@@ -28,13 +28,15 @@ Item {
         property string img_bg: ""
 
         function saveAsImage(fileName){
-            var win = modelCollage.testWin()
-            var fname = fileName + ".jpg"
-            if (win) {
-                fname = fileName
-            }
+            // var win = modelCollage.testWin()
+            // var fname = fileName + ".jpg"
+            // if (win) {
+            //     fname = fileName
+            // }
 
-            canvas.save(modelCollage.getFile(fname), Qt.size(internal.img_width, internal.img_height))
+            // canvas.save(modelCollage.getFile(fname), Qt.size(internal.img_width, internal.img_height))
+
+            modelCollage.saveImage(fileName)
 
         }
 
