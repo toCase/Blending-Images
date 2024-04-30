@@ -12,6 +12,7 @@ files = [
     ('qml/ProjectCard.qml', './qml'),
     ('qml/ProjectConstructor.qml', './qml'),
     ('qml/ProjectPreview.qml', './qml'),
+    ('qtquickcontrols2.conf', '.'),
 ]
 
 a = Analysis(

@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Controls.Imagine
+import QtQuick.Controls
 import QtQuick.Layouts
 
 Item {
@@ -65,8 +65,8 @@ Item {
             id: directory
 
             Layout.fillWidth: true
-            Layout.minimumHeight: 55
-            Layout.maximumHeight: 55
+            Layout.minimumHeight: implicitHeight
+            Layout.maximumHeight: implicitHeight
 
             RowLayout {
                 anchors.fill: parent
@@ -76,7 +76,9 @@ Item {
                 ListView {
                     id: dirSelector
                     Layout.fillWidth: true
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: parent.height - 10
+                    Layout.maximumHeight: parent.height - 10
+                    Layout.alignment: Qt.AlignVCenter
 
                     model: modelDir
                     orientation: ListView.Horizontal
@@ -87,12 +89,12 @@ Item {
 
                         width: dirSelector.width / modelDir.rowCount()
                         height: dirSelector.height
-                        color: dirSelector.currentIndex === index ? "#ff6600" : "#707b90"
+                        color: dirSelector.currentIndex === index ? clr_ORANGE : clr_GREEN
                         Label{
                             id: dirSelector_name
                             anchors.centerIn: parent
                             text: dir
-                            color: "#ffffff"
+                            color: clr_WHITE
                             font.family: "Roboto"
                             font.pointSize: 16
                         }
@@ -125,9 +127,16 @@ Item {
 
                     Layout.minimumWidth: implicitWidth
                     Layout.maximumWidth: implicitWidth
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
+
 
                     text: "+"
+
+                    Material.background: clr_ORANGE
+                    Material.foreground: clr_DARK
+                    Material.roundedScale: Material.ExtraSmallScale
+
                     onClicked: internal.add()
                 }
             }
@@ -138,8 +147,8 @@ Item {
             visible: false
 
             Layout.fillWidth: true
-            Layout.minimumHeight: 55
-            Layout.maximumHeight: 55
+            Layout.minimumHeight: implicitHeight
+            Layout.maximumHeight: implicitHeight
 
             RowLayout {
                 anchors.fill: parent
@@ -150,16 +159,23 @@ Item {
 
                     Layout.minimumWidth: implicitWidth
                     Layout.maximumWidth: implicitWidth
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
 
                     text: "Удалить"
+
+                    Material.background: Material.Pink
+                    Material.foreground: clr_WHITE
+                    Material.roundedScale: Material.ExtraSmallScale
+
                     onClicked: internal.del()
                 }
 
                 TextField {
                     id: dir_name
                     Layout.fillWidth: true
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
                     horizontalAlignment: Qt.AlignHCenter
                     verticalAlignment: Qt.AlignVCenter
                     placeholderText: "Название раздела"
@@ -170,9 +186,15 @@ Item {
 
                     Layout.minimumWidth: implicitWidth
                     Layout.maximumWidth: implicitWidth
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
 
                     text: "Сохранить"
+
+                    Material.background: clr_ORANGE
+                    Material.foreground: clr_DARK
+                    Material.roundedScale: Material.ExtraSmallScale
+
                     onClicked: internal.save()
                 }
                 Button {
@@ -180,9 +202,15 @@ Item {
 
                     Layout.minimumWidth: implicitWidth
                     Layout.maximumWidth: implicitWidth
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
 
                     text: "X"
+
+                    Material.background: clr_ORANGE
+                    Material.foreground: clr_DARK
+                    Material.roundedScale: Material.ExtraSmallScale
+
                     onClicked: internal.close()
                 }
             }

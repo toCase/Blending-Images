@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Controls.Imagine
+import QtQuick.Controls
 import QtQuick.Layouts
 
 Item {
@@ -83,7 +83,7 @@ Item {
             Layout.maximumWidth: 3
             Layout.topMargin: 5
             Layout.bottomMargin: 5
-            color: "#707b90"
+            color: clr_DARK
         }
 
         ColumnLayout {
@@ -125,12 +125,12 @@ Item {
                     required property bool selected
                     required property int index
 
-                    border.width: 6
+                    border.width: 4
                     border.color:
                         if (selected) {
-                            "#406684"
+                            clr_ORANGE
                         } else {
-                            "transparent"
+                            clr_WHITE
                         }
 
                     Image {
@@ -148,21 +148,17 @@ Item {
                         }
                         onContainsMouseChanged: {
                             if (containsMouse){
-                                parent.border.color = "#793690"
+                                parent.border.color = clr_DARK
                             } else {
                                 if (selected) {
-                                    parent.border.color = "#406684"
+                                    parent.border.color = clr_ORANGE
                                 } else {
-                                    parent.border.color = "transparent"
+                                    parent.border.color = clr_WHITE
                                 }
                             }
                         }
                     }
                 }
-                // highlight: Rectangle {
-                //     color: "lightsteelblue";
-                //     // radius: 5
-                // }
                 highlightMoveDuration: 0
                 focus: true
                 ScrollBar.vertical: ScrollBar { id:scrollTable }
@@ -188,7 +184,7 @@ Item {
                     anchors.leftMargin: 20
 
                     font.pointSize: 13
-                    color: "#FFFFFF"
+                    color: clr_WHITE
 
                     horizontalAlignment: Qt.AlignLeft
                     verticalAlignment: Qt.AlignVCenter
@@ -199,8 +195,8 @@ Item {
                 id: info
 
                 Layout.fillWidth: true
-                Layout.minimumHeight: 55
-                Layout.maximumHeight: 55
+                Layout.minimumHeight: implicitHeight
+                Layout.maximumHeight: implicitHeight
 
                 RowLayout {
                     anchors.fill: parent
@@ -211,7 +207,8 @@ Item {
                     }
 
                     Label {
-                        Layout.fillHeight: true
+                        Layout.minimumHeight: implicitHeight
+                        Layout.maximumHeight: implicitHeight
                         Layout.minimumWidth: implicitWidth
                         Layout.maximumWidth: implicitWidth
 
@@ -220,7 +217,8 @@ Item {
                     }
                     Label {
                         id: info_all
-                        Layout.fillHeight: true
+                        Layout.minimumHeight: implicitHeight
+                        Layout.maximumHeight: implicitHeight
                         Layout.minimumWidth: implicitWidth
                         Layout.maximumWidth: implicitWidth
                         text: ""
@@ -228,7 +226,8 @@ Item {
                     }
                     Label {
                         Layout.leftMargin: 20
-                        Layout.fillHeight: true
+                        Layout.minimumHeight: implicitHeight
+                        Layout.maximumHeight: implicitHeight
                         Layout.minimumWidth: implicitWidth
                         Layout.maximumWidth: implicitWidth
 
@@ -238,7 +237,8 @@ Item {
 
                     Label {
                         id: info_selected
-                        Layout.fillHeight: true
+                        Layout.minimumHeight: implicitHeight
+                        Layout.maximumHeight: implicitHeight
                         Layout.minimumWidth: implicitWidth
                         Layout.maximumWidth: implicitWidth
 
@@ -256,8 +256,8 @@ Item {
                 id: menu_directory
 
                 Layout.fillWidth: true
-                Layout.minimumHeight: 55
-                Layout.maximumHeight: 55
+                Layout.minimumHeight: implicitHeight
+                Layout.maximumHeight: implicitHeight
 
                 RowLayout {
                     anchors.fill: parent
@@ -267,9 +267,14 @@ Item {
 
                         Layout.minimumWidth: implicitWidth
                         Layout.maximumWidth: implicitWidth
-                        Layout.fillHeight: true
+                        Layout.minimumHeight: implicitHeight
+                        Layout.maximumHeight: implicitHeight
 
                         text: "Выбрать все"
+
+                        Material.background: clr_ORANGE
+                        Material.foreground: clr_DARK
+                        Material.roundedScale: Material.ExtraSmallScale
 
                         onClicked: internal.selectAll()
 
@@ -280,9 +285,15 @@ Item {
 
                         Layout.minimumWidth: implicitWidth
                         Layout.maximumWidth: implicitWidth
-                        Layout.fillHeight: true
+                        Layout.minimumHeight: implicitHeight
+                        Layout.maximumHeight: implicitHeight
 
                         text: "Снять выбор"
+
+                        Material.background: clr_ORANGE
+                        Material.foreground: clr_DARK
+                        Material.roundedScale: Material.ExtraSmallScale
+
                         onClicked: internal.unselectAll()
 
                     }
@@ -293,7 +304,8 @@ Item {
                         id: combo_dir
                         Layout.minimumWidth: 200
                         Layout.maximumWidth: 200
-                        Layout.fillHeight: true
+                        Layout.minimumHeight: but_dir_unselectAll.height
+                        Layout.maximumHeight: but_dir_unselectAll.height
                         model: modelDir
                         textRole: "dir"
                         valueRole: "id"
@@ -303,9 +315,14 @@ Item {
 
                         Layout.minimumWidth: implicitWidth
                         Layout.maximumWidth: implicitWidth
-                        Layout.fillHeight: true
+                        Layout.minimumHeight: implicitHeight
+                        Layout.maximumHeight: implicitHeight
 
                         text: "Перенести"
+
+                        Material.background: clr_ORANGE
+                        Material.foreground: clr_DARK
+                        Material.roundedScale: Material.ExtraSmallScale
 
                         onClicked: internal.changeDir()
                     }
@@ -320,9 +337,14 @@ Item {
 
                         Layout.minimumWidth: implicitWidth
                         Layout.maximumWidth: implicitWidth
-                        Layout.fillHeight: true
+                        Layout.minimumHeight: implicitHeight
+                        Layout.maximumHeight: implicitHeight
 
                         text: "Удалить"
+
+                        Material.background: Material.Pink
+                        Material.foreground: clr_WHITE
+                        Material.roundedScale: Material.ExtraSmallScale
 
                         onClicked: internal.del()
                     }

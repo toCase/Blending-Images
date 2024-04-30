@@ -18,6 +18,9 @@
         "qml/ProjectMain.qml",
         "qml/ProjectPreview.qml",
         "qml/Projects.qml",
-        "qml/main.qml"
+        "qml/main.qml",
+        "qtquickcontrols2.conf",
+        "rc_resource.py",
+        "resource.qrc"
     ]
 }

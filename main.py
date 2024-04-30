@@ -9,10 +9,13 @@
 # ------------------------------------------
 
 import sys
+import os
 from pathlib import Path
 
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
+
+from PySide6.QtQuickControls2 import QQuickStyle
 
 import DirModel
 import FileModel
@@ -20,9 +23,15 @@ import EmptyFileModel
 import ProjectModel
 import CollageModel
 
+import rc_resource
+
 
 
 if __name__ == "__main__":
+
+    if not os.environ.get("QT_QUICK_CONTROLS_STYLE"):
+        QQuickStyle.setStyle("Material")
+
     app = QGuiApplication(sys.argv)
     engine = QQmlApplicationEngine()
 
@@ -39,9 +48,6 @@ if __name__ == "__main__":
 
     projectModel = ProjectModel.ProjectModel()
     engine.rootContext().setContextProperty("modelProject", projectModel)
-
-    # projectFileModel = FileModel.FileModel()
-    # engine.rootContext().setContextProperty("modelPF", projectFileModel)
 
     collageModel = CollageModel.CollageModel()
     engine.rootContext().setContextProperty("modelCollage", collageModel)

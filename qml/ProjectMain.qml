@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls.Imagine
+import QtQuick.Controls
 
 Item {
 
@@ -36,8 +36,8 @@ Item {
 
         Pane {
             Layout.fillWidth: true
-            Layout.minimumHeight: 55
-            Layout.maximumHeight: 55
+            Layout.minimumHeight: implicitHeight
+            Layout.maximumHeight: implicitHeight
 
             RowLayout {
                 anchors.fill: parent
@@ -45,16 +45,26 @@ Item {
 
                 Button {
                     id: but_create
-                    Layout.minimumWidth: implicitWidth
-                    Layout.maximumWidth: implicitWidth
-                    Layout.fillHeight: true
+                    Layout.minimumWidth: 120
+                    Layout.maximumWidth: 120
+                    // Layout.maximumWidth: implicitWidth
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
+
                     text: "Создать"
+
+                    // Material.variant: Material.Dense
+                    Material.background: clr_ORANGE
+                    Material.foreground: clr_DARK
+                    Material.roundedScale: Material.ExtraSmallScale
+
                     onClicked: create()
                 }
 
                 Label {
                     Layout.fillWidth: true
                     Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
                     text: "Проекты"
                     font.pointSize: 18
                     horizontalAlignment: Qt.AlignHCenter
@@ -108,6 +118,9 @@ Item {
                         Layout.fillHeight: true
                         flat: true
                         text: '\u22EE'
+
+                        Material.roundedScale: Material.ExtraSmallScale
+
                         onClicked: edit(index)
                     }
                 }
@@ -121,8 +134,8 @@ Item {
 
         Pane {
             Layout.fillWidth: true
-            Layout.minimumHeight: 55
-            Layout.maximumHeight: 55
+            Layout.minimumHeight: implicitHeight
+            Layout.maximumHeight: implicitHeight
 
             RowLayout {
                 anchors.fill: parent
@@ -130,10 +143,17 @@ Item {
 
                 Button {
                     id: but_del
-                    Layout.minimumWidth: implicitWidth
-                    Layout.maximumWidth: implicitWidth
-                    Layout.fillHeight: true
+                    Layout.minimumWidth: 120
+                    Layout.maximumWidth: 120
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
+
                     text: "Удалить"
+
+                    Material.background: Material.Pink
+                    Material.foreground: clr_WHITE
+                    Material.roundedScale: Material.ExtraSmallScale
+
                     onClicked: internal.delProject()
                 }
 

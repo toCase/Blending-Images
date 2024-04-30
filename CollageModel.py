@@ -1,8 +1,7 @@
 # This Python file uses the following encoding: utf-8
-from PySide6.QtCore import QAbstractTableModel, Qt, QModelIndex, Slot, Signal, QItemSelection, QItemSelectionModel
-from PySide6.QtGui import QPainter, QColor
+from PySide6.QtCore import QAbstractTableModel, Qt, QModelIndex, Slot, Signal, QItemSelection, QItemSelectionModel, QPoint, QRectF
+from PySide6.QtGui import QPainter, QColor, QImage, QPageSize
 from PySide6.QtPrintSupport import QPrinter
-
 from Database import Database
 from misc import FileWorker
 
@@ -179,7 +178,6 @@ class CollageModel(QAbstractTableModel):
     def makeCollage(self, row:int, column:int,):
         data_row = self.map[row]
         card = data_row.get(column)
-        print("C: ", card)
         return card
 
     @Slot(result=str)
@@ -196,11 +194,29 @@ class CollageModel(QAbstractTableModel):
         f = self.fw.getPathByURL(fname)
         printer = QPrinter()
         printer.setOutputFormat(QPrinter.PdfFormat)
+        printer.setPageSize(QPageSize.A5)
         printer.setOutputFileName(f)
 
         painter = QPainter(printer)
-        painter.setBackground(QColor(self.project_bg))
-        painter.drawText(10, 10, "Test 2")
+        painter.setPen(QColor(self.project_bg))
+
+        for r in range(0, self.project_rows, 1):
+            for c in range(0, self.project_cols, 1):
+                card = self.makeCollage(r, c)
+
+                x = c * 76
+                y = r * 85
+
+                if card['displayType']:
+                    img = QImage()
+                    img.load(card['display'])
+                    painter.drawImage(QPoint(x, y), img)
+                else:
+                    rect = QRectF(x, y, 76.0, 85.0)
+                    painter.drawRect(rect)
+                    painter.fillRect(rect, QColor(self.project_bg))
+
+
         painter.end()
 
 

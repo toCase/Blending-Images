@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls.Imagine
+import QtQuick.Controls
 import QtQuick.Dialogs
 
 Item {
@@ -36,32 +36,6 @@ Item {
 
         function saveAsPDF(fileName){
             modelCollage.printPDF(fileName)
-            // var pdf = new QtPdfWriter(fileName + ".pdf")
-            // pdf.setPageSize(Qt.size(internal.img_width, internal.img_height))
-
-            // var ctx = pdf.paintEngine()
-            // ctx.clearRect(0, 0, internal.img_width, internal.img_height)
-
-            // for (var r = 0; r < modelCollage.rowCount(); r++) {
-            //     for (var c = 0; c < modelCollage.columnCount(); c++) {
-            //         var card = modelCollage.makeCollage(r, c)
-            //         var x = c * internal.cell_width
-            //         var y = r * internal.cell_height
-            //         var t = card["displayType"]
-            //         var d = card["display"]
-
-            //         if (t) {
-            //             ctx.drawImage(d, x, y, internal.cell_width, internal.cell_height)
-            //             ctx.save()
-            //         } else {
-            //             ctx.fillStyle = internal.img_bg
-            //             ctx.fillRect(x, y, internal.cell_width, internal.cell_height)
-            //             ctx.save()
-            //         }
-            //     }
-            // }
-
-            // pdf.end()
         }
     }
 
@@ -70,16 +44,21 @@ Item {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        height: 35
+        height: implicitHeight
         spacing: 10
 
         Button {
             id: but_close
-            Layout.fillHeight: true
+            Layout.minimumHeight: implicitHeight
+            Layout.maximumHeight: implicitHeight
             Layout.minimumWidth: implicitWidth
             Layout.maximumWidth: implicitWidth
 
-            text: "< Back"
+            text: "< Назад"
+
+            Material.background: clr_ORANGE
+            Material.foreground: clr_DARK
+            Material.roundedScale: Material.ExtraSmallScale
 
             onClicked: back()
 
@@ -89,11 +68,16 @@ Item {
         }
         Button {
             id: but_upd
-            Layout.fillHeight: true
+            Layout.minimumHeight: implicitHeight
+            Layout.maximumHeight: implicitHeight
             Layout.minimumWidth: implicitWidth
             Layout.maximumWidth: implicitWidth
 
-            text: "UPDATE"
+            text: "Сформировать"
+
+            Material.background: clr_ORANGE
+            Material.foreground: clr_DARK
+            Material.roundedScale: Material.ExtraSmallScale
 
             onClicked: canvas.requestPaint()
 
@@ -101,11 +85,16 @@ Item {
 
         Button {
             id: but_save
-            Layout.fillHeight: true
+            Layout.minimumHeight: implicitHeight
+            Layout.maximumHeight: implicitHeight
             Layout.minimumWidth: implicitWidth
             Layout.maximumWidth: implicitWidth
 
-            text: "SAVE"
+            text: "Сохранить в файл"
+
+            Material.background: clr_ORANGE
+            Material.foreground: clr_DARK
+            Material.roundedScale: Material.ExtraSmallScale
 
             onClicked: fileDialog.open()
 

@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls.Imagine
+import QtQuick.Controls
 import Qt.labs.qmlmodels
 
 Item {
@@ -49,27 +49,39 @@ Item {
         Pane {
             id: menu
             Layout.fillWidth: true
-            Layout.minimumHeight: 60
-            Layout.maximumHeight: 60
+            Layout.minimumHeight: implicitHeight
+            Layout.maximumHeight: implicitHeight
 
             RowLayout {
                 anchors.fill: parent
                 spacing: 10
 
                 Button {
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
                     Layout.minimumWidth: implicitWidth
                     Layout.maximumWidth: implicitWidth
 
-                    text: "< Back"
+                    text: "< Назад"
+
+                    Material.background: clr_ORANGE
+                    Material.foreground: clr_DARK
+                    Material.roundedScale: Material.ExtraSmallScale
+
                     onClicked: back()
                 }
                 Button {
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
                     Layout.minimumWidth: implicitWidth
                     Layout.maximumWidth: implicitWidth
 
-                    text: "Preview"
+                    text: "Подготовка"
+
+                    Material.background: clr_ORANGE
+                    Material.foreground: clr_DARK
+                    Material.roundedScale: Material.ExtraSmallScale
+
                     onClicked: preview()
                 }
 
@@ -78,32 +90,39 @@ Item {
                 }
 
                 Label {
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
                     Layout.minimumWidth: implicitWidth
                     Layout.maximumWidth: implicitWidth
                     text: "Удаление"
                     horizontalAlignment: Qt.AlignRight
                     verticalAlignment: Qt.AlignVCenter
-                    color: mode.checked ? "#786e8a": "#29c200"
+                    color: mode.checked ? clr_DARK : Material.color(Material.Pink)
+                    font.bold: !mode.checked
+                    font.pointSize: mode.checked ? 11 : 13
 
                 }
 
                 Switch {
                     id: mode
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
                     Layout.minimumWidth: implicitWidth
                     Layout.maximumWidth: implicitWidth
                     checked: true
 
                 }
                 Label {
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
                     Layout.minimumWidth: implicitWidth
                     Layout.maximumWidth: implicitWidth
                     text: "Вставка"
                     horizontalAlignment: Qt.AlignRight
                     verticalAlignment: Qt.AlignVCenter
-                    color: mode.checked ? "#29c200" : "#786e8a"
+                    color: mode.checked ? Material.color(Material.Green) : clr_DARK
+                    font.bold: mode.checked
+                    font.pointSize: mode.checked ? 13 : 11
 
                 }
                 Item {
@@ -130,20 +149,18 @@ Item {
 
                     spacing: 5
 
-                    Pane {
-                        Layout.fillWidth: true
-                        Layout.minimumHeight: 55
-                        Layout.maximumHeight: 55
+                    ComboBox {
+                        id: combo_dir
 
-                        ComboBox {
-                            id: combo_dir
-                            anchors.fill: parent
-                            model: modelDir
-                            textRole: "dir"
-                            valueRole: "id"
-                            onActivated: {
-                                modelDir.setCurrent(currentValue)
-                            }
+                        Layout.fillWidth: true
+                        Layout.minimumHeight: implicitHeight
+                        Layout.maximumHeight: implicitHeight
+
+                        model: modelDir
+                        textRole: "dir"
+                        valueRole: "id"
+                        onActivated: {
+                            modelDir.setCurrent(currentValue)
                         }
                     }
 
@@ -174,12 +191,12 @@ Item {
                             required property bool selected
                             required property int index
 
-                            border.width: 6
+                            border.width: 4
                             border.color:
                                 if (selected) {
-                                    "#406684"
+                                    clr_ORANGE
                                 } else {
-                                    "transparent"
+                                    clr_WHITE
                                 }
 
                             Image {
@@ -197,12 +214,12 @@ Item {
                                 }
                                 onContainsMouseChanged: {
                                     if (containsMouse){
-                                        parent.border.color = "#793690"
+                                        parent.border.color = clr_DARK
                                     } else {
                                         if (selected) {
-                                            parent.border.color = "#406684"
+                                            parent.border.color = clr_ORANGE
                                         } else {
-                                            parent.border.color = "transparent"
+                                            parent.border.color = clr_WHITE
                                         }
                                     }
                                 }
@@ -223,7 +240,7 @@ Item {
                     Layout.minimumWidth: 3
                     Layout.maximumWidth: 3
 
-                    color: "#007c89"
+                    color: clr_DARK
 
                 }
 
@@ -262,10 +279,10 @@ Item {
                             width: 76
                             height: 85
                             visible: !displayType
-                            color: "#C9D4C0"
+                            color: clr_CELL
                         }
 
-                        color: selected ? "#406684": "transparent"
+                        color: selected ? clr_ORANGE : "transparent"
 
                         MouseArea {
                             anchors.fill: parent
@@ -284,8 +301,6 @@ Item {
                                 } else {
                                     modelCollage.makeFile(row, column, 0)
                                 }
-
-                                console.log("ID: ", idx)
                             }
                         }
                     }

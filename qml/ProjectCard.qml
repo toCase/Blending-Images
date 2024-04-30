@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls.Imagine
+import QtQuick.Controls
 import QtQuick.Dialogs
 
 Item {
@@ -101,45 +101,36 @@ Item {
             anchors.fill: parent
             spacing: 10
 
-            RowLayout {
-                Layout.fillWidth: true
-                Layout.minimumHeight: 40
-                Layout.maximumHeight: 40
+            TextField {
+                id: project_name
 
-                spacing: 10
-                Label {
-                    Layout.minimumWidth: 100
-                    Layout.maximumWidth: 100
-                    Layout.fillHeight: true
-                    text: "Название: "
-                    horizontalAlignment: Qt.AlignRight
-                    verticalAlignment: Qt.AlignVCenter
-                }
-                TextField {
-                    id: project_name
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                }
+                Layout.fillWidth: true
+                Layout.minimumHeight: implicitHeight
+                Layout.maximumHeight: implicitHeight
+
+                placeholderText: "Название"
             }
 
             RowLayout {
                 Layout.fillWidth: true
-                Layout.minimumHeight: 40
-                Layout.maximumHeight: 40
+                Layout.minimumHeight: implicitHeight
+                Layout.maximumHeight: implicitHeight
 
                 spacing: 10
                 Label {
                     Layout.leftMargin: 100
                     Layout.minimumWidth: 100
                     Layout.maximumWidth: 100
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
                     text: "Строки: "
                     horizontalAlignment: Qt.AlignRight
                     verticalAlignment: Qt.AlignVCenter
                 }
                 TextField {
                     id: card_row
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
                     Layout.minimumWidth: 100
                     Layout.maximumWidth: 100
 
@@ -148,6 +139,16 @@ Item {
                     }
                     horizontalAlignment: Qt.AlignHCenter
                     verticalAlignment: Qt.AlignVCenter
+
+                    onFocusChanged: {
+                        if (focus){
+                            selectAll()
+                        }
+                    }
+
+                    onTextChanged:{
+                        card_height.text = Number(text) * 85
+                    }
 
                     onEditingFinished: {
                         card_height.text = Number(text) * 85
@@ -157,8 +158,8 @@ Item {
 
             RowLayout {
                 Layout.fillWidth: true
-                Layout.minimumHeight: 40
-                Layout.maximumHeight: 40
+                Layout.minimumHeight: implicitHeight
+                Layout.maximumHeight: implicitHeight
 
                 spacing: 10
 
@@ -166,14 +167,16 @@ Item {
                     Layout.leftMargin: 100
                     Layout.minimumWidth: 100
                     Layout.maximumWidth: 100
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
                     text: "Столбцы: "
                     horizontalAlignment: Qt.AlignRight
                     verticalAlignment: Qt.AlignVCenter
                 }
                 TextField {
                     id: card_col
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
                     Layout.minimumWidth: 100
                     Layout.maximumWidth: 100
 
@@ -182,6 +185,17 @@ Item {
                     }
                     horizontalAlignment: Qt.AlignHCenter
                     verticalAlignment: Qt.AlignVCenter
+
+                    onFocusChanged: {
+                        if (focus){
+                            selectAll()
+                        }
+                    }
+
+                    onTextChanged: {
+                        card_width.text = Number(text) * 76
+                    }
+
                     onEditingFinished: {
                         card_width.text = Number(text) * 76
                     }
@@ -195,15 +209,16 @@ Item {
 
             RowLayout {
                 Layout.fillWidth: true
-                Layout.minimumHeight: 40
-                Layout.maximumHeight: 40
+                Layout.minimumHeight: implicitHeight
+                Layout.maximumHeight: implicitHeight
 
                 spacing: 10
                 Label {
                     Layout.leftMargin: 100
                     Layout.minimumWidth: 100
                     Layout.maximumWidth: 100
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
                     text: "Ширина: "
                     horizontalAlignment: Qt.AlignRight
                     verticalAlignment: Qt.AlignVCenter
@@ -211,7 +226,8 @@ Item {
 
                 TextField {
                     id: card_width
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
                     Layout.minimumWidth: 100
                     Layout.maximumWidth: 100
 
@@ -232,22 +248,24 @@ Item {
             }
             RowLayout {
                 Layout.fillWidth: true
-                Layout.minimumHeight: 40
-                Layout.maximumHeight: 40
+                Layout.minimumHeight: implicitHeight
+                Layout.maximumHeight: implicitHeight
 
                 spacing: 10
                 Label {
                     Layout.leftMargin: 100
                     Layout.minimumWidth: 100
                     Layout.maximumWidth: 100
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
                     text: "Высота: "
                     horizontalAlignment: Qt.AlignRight
                     verticalAlignment: Qt.AlignVCenter
                 }
                 TextField {
                     id: card_height
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
                     Layout.minimumWidth: 100
                     Layout.maximumWidth: 100
 
@@ -267,21 +285,23 @@ Item {
             }
             RowLayout {
                 Layout.fillWidth: true
-                Layout.minimumHeight: 40
-                Layout.maximumHeight: 40
+                Layout.minimumHeight: implicitHeight
+                Layout.maximumHeight: implicitHeight
 
                 spacing: 10
                 Label {
                     Layout.leftMargin: 100
                     Layout.minimumWidth: 100
                     Layout.maximumWidth: 100
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
                     text: "Фон: "
                     horizontalAlignment: Qt.AlignRight
                     verticalAlignment: Qt.AlignVCenter
                 }
                 Rectangle {
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: 40
+                    Layout.maximumHeight: 40
                     Layout.minimumWidth: 100
                     Layout.maximumWidth: 100
 
@@ -307,8 +327,8 @@ Item {
 
             Pane {
                 Layout.fillWidth: true
-                Layout.minimumHeight: 55
-                Layout.maximumHeight: 55
+                Layout.minimumHeight: implicitHeight
+                Layout.maximumHeight: implicitHeight
 
                 RowLayout {
                     anchors.fill: parent
@@ -320,9 +340,14 @@ Item {
                     Button{
                         Layout.minimumWidth: implicitWidth
                         Layout.maximumWidth: implicitWidth
-                        Layout.fillHeight: true
+                        Layout.minimumHeight: implicitHeight
+                        Layout.maximumHeight: implicitHeight
 
                         text: "Сохранить"
+
+                        Material.background: clr_ORANGE
+                        Material.foreground: clr_DARK
+                        Material.roundedScale: Material.ExtraSmallScale
 
                         onClicked: internal.save()
                     }
@@ -330,9 +355,14 @@ Item {
                     Button{
                         Layout.minimumWidth: implicitWidth
                         Layout.maximumWidth: implicitWidth
-                        Layout.fillHeight: true
+                        Layout.minimumHeight: implicitHeight
+                        Layout.maximumHeight: implicitHeight
 
                         text: "Отмена"
+
+                        Material.background: clr_ORANGE
+                                            Material.foreground: clr_DARK
+                                            Material.roundedScale: Material.ExtraSmallScale
 
                         onClicked: cancel()
                     }

@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Controls.Imagine
+import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Dialogs
 
@@ -8,7 +8,6 @@ Item {
 
 
     signal add()
-
 
 
     function onSaved(){
@@ -59,8 +58,8 @@ Item {
             id: form_directory
 
             Layout.fillWidth: true
-            Layout.minimumHeight: 55
-            Layout.maximumHeight: 55
+            Layout.minimumHeight: implicitHeight
+            Layout.maximumHeight: implicitHeight
 
             RowLayout {
                 anchors.fill: parent
@@ -69,7 +68,8 @@ Item {
                 Label {
                     Layout.minimumWidth: implicitWidth
                     Layout.maximumWidth: implicitWidth
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
                     text: "Директория: "
                     horizontalAlignment: Qt.AlignHCenter
                     verticalAlignment: Qt.AlignVCenter
@@ -77,8 +77,13 @@ Item {
 
                 TextField {
                     id: dir_name
+
                     Layout.fillWidth: true
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: parent.height - 10
+                    Layout.maximumHeight: parent.height - 10
+
+                    readOnly: true
+
                     horizontalAlignment: Qt.AlignHCenter
                     verticalAlignment: Qt.AlignVCenter
                 }
@@ -88,9 +93,14 @@ Item {
 
                     Layout.minimumWidth: implicitWidth
                     Layout.maximumWidth: implicitWidth
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
 
                     text: "..."
+
+                    Material.background: clr_ORANGE
+                    Material.foreground: clr_DARK
+                    Material.roundedScale: Material.ExtraSmallScale
 
                     onClicked: folderDialog.open()
                 }
@@ -102,6 +112,7 @@ Item {
             id: grid_files
             Layout.fillWidth: true
             Layout.fillHeight: true
+
             Layout.rightMargin: 10
             Layout.leftMargin: 10
 
@@ -126,23 +137,21 @@ Item {
 
                 color:
                     if (saved) {
-                        "#F3ECA5"
+                        clr_GREEN
                     } else {
-                        "transparent"
-                    }
-                opacity:
-                    if (saved) {
-                        0.9
-                    } else {
-                        1
+                        clr_WHITE
                     }
 
-                border.width: 6
+                border.width: 4
                 border.color:
                     if (selected) {
-                        "#406684"
+                        clr_ORANGE
                     } else {
-                        "transparent"
+                        if (saved) {
+                            clr_GREEN
+                        } else {
+                            clr_WHITE
+                        }
                     }
 
                 Image {
@@ -163,25 +172,21 @@ Item {
                     }
                     onContainsMouseChanged: {
                         if (containsMouse){
-                            parent.border.color = "#793690"
+                            parent.border.color = clr_DARK
                         } else {
                             if (selected) {
-                                parent.border.color = "#406684"
+                                parent.border.color = clr_ORANGE
                             } else {
-                                parent.border.color = "transparent"
+                                if (saved) {
+                                    parent.border.color = clr_GREEN
+                                } else {
+                                    parent.border.color = clr_WHITE
+                                }
                             }
                         }
                     }
-
                 }
-
             }
-
-            // highlight: Rectangle {
-            //     border.color: "#406684";
-            //     border.width: 6
-            //     radius: 5
-            // }
             highlightMoveDuration: 0
             focus: true
             ScrollBar.vertical: ScrollBar { id:scrollTable }
@@ -193,8 +198,8 @@ Item {
             id: info
 
             Layout.fillWidth: true
-            Layout.minimumHeight: 55
-            Layout.maximumHeight: 55
+            Layout.minimumHeight: implicitHeight
+            Layout.maximumHeight: implicitHeight
 
             RowLayout {
                 anchors.fill: parent
@@ -205,7 +210,8 @@ Item {
                 }
 
                 Label {
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
                     Layout.minimumWidth: implicitWidth
                     Layout.maximumWidth: implicitWidth
 
@@ -214,7 +220,8 @@ Item {
                 }
                 Label {
                     id: info_all
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
                     Layout.minimumWidth: implicitWidth
                     Layout.maximumWidth: implicitWidth
                     text: ""
@@ -222,7 +229,8 @@ Item {
                 }
                 Label {
                     Layout.leftMargin: 20
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
                     Layout.minimumWidth: implicitWidth
                     Layout.maximumWidth: implicitWidth
 
@@ -232,7 +240,8 @@ Item {
 
                 Label {
                     id: info_selected
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
                     Layout.minimumWidth: implicitWidth
                     Layout.maximumWidth: implicitWidth
 
@@ -250,8 +259,8 @@ Item {
             id: menu_directory
 
             Layout.fillWidth: true
-            Layout.minimumHeight: 55
-            Layout.maximumHeight: 55
+            Layout.minimumHeight: implicitHeight
+            Layout.maximumHeight: implicitHeight
 
             RowLayout {
                 anchors.fill: parent
@@ -261,9 +270,14 @@ Item {
 
                     Layout.minimumWidth: implicitWidth
                     Layout.maximumWidth: implicitWidth
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
 
                     text: "Выбрать все"
+
+                    Material.background: clr_ORANGE
+                    Material.foreground: clr_DARK
+                    Material.roundedScale: Material.ExtraSmallScale
 
                     onClicked: internal.selectAll()
 
@@ -274,9 +288,15 @@ Item {
 
                     Layout.minimumWidth: implicitWidth
                     Layout.maximumWidth: implicitWidth
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
 
                     text: "Снять выбор"
+
+                    Material.background: clr_ORANGE
+                    Material.foreground: clr_DARK
+                    Material.roundedScale: Material.ExtraSmallScale
+
                     onClicked: internal.unselectAll()
 
                 }
@@ -289,9 +309,14 @@ Item {
 
                     Layout.minimumWidth: implicitWidth
                     Layout.maximumWidth: implicitWidth
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
 
                     text: "Добавить"
+
+                    Material.background: clr_ORANGE
+                    Material.foreground: clr_DARK
+                    Material.roundedScale: Material.ExtraSmallScale
 
                     onClicked: add()
                 }

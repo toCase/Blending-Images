@@ -1,8 +1,8 @@
 import QtQuick
-import QtQuick.Controls.Imagine
+import QtQuick.Controls
 import QtQuick.Layouts
 
-Item {
+Pane {
 
     property int row_HEIGHT: 55
 
@@ -45,8 +45,8 @@ Item {
             id: top_menu
 
             Layout.fillWidth: true
-            Layout.minimumHeight: 55
-            Layout.maximumHeight: 55
+            Layout.minimumHeight: implicitHeight
+            Layout.maximumHeight: implicitHeight
 
             RowLayout {
                 anchors.fill: parent
@@ -57,9 +57,14 @@ Item {
 
                     Layout.minimumWidth: implicitWidth
                     Layout.maximumWidth: implicitWidth
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
 
                     text: "База"
+
+                    Material.background: "#F97300"
+                    Material.foreground: "#32012F"
+                    Material.roundedScale: Material.ExtraSmallScale
 
                     onClicked: internal.openBaseEditor()
                 }
@@ -69,9 +74,14 @@ Item {
 
                     Layout.minimumWidth: implicitWidth
                     Layout.maximumWidth: implicitWidth
-                    Layout.fillHeight: true
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
 
-                    text: "Project"
+                    text: "Проекты"
+
+                    Material.background: "#F97300"
+                    Material.foreground: "#32012F"
+                    Material.roundedScale: Material.ExtraSmallScale
 
                     onClicked: internal.openProject()
 
@@ -90,7 +100,7 @@ Item {
         }
     }
 
-    Item {
+    Pane {
         id: lab_start
         visible: false
 
