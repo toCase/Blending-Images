@@ -90,7 +90,7 @@ class CollageModel(QAbstractTableModel):
                             _display = self.project_bg
                         else:
                            _type = True
-                           _display = self.db.getFile(_file)
+                           _display = self.fw.getUrl(self.db.getFile(_file))
 
                         _row[item['col']] = {'id':_id, 'file':_file, 'displayType':_type, 'display': _display, 'selected': False}
                 self.map.append(_row)
@@ -161,7 +161,7 @@ class CollageModel(QAbstractTableModel):
 
             if file_id:
                 card['displayType'] = True
-                card['display'] = self.db.getFile(file_id)
+                card['display'] = self.fw.getUrl(self.db.getFile(file_id))
             else:
                 card['displayType'] = False
                 card['display'] = ""
