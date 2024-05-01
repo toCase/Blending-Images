@@ -6,17 +6,24 @@
 from PySide6 import QtCore
 
 qt_resource_data = b"\
-\x00\x00\x00\x85\
+\x00\x00\x00\xf2\
 [\
 Controls]\x0aStyle=\
 Material\x0a\x0a[Mater\
 ial]\x0aTheme=Light\
 \x0aVariant=Dense\x0aA\
-ccent=#F97300\x0aPr\
-imary=#524C42\x0aFo\
-reground=#32012F\
-\x0aBackground=#E2D\
-FD0\x0a\
+ccent=#A5C9CA\x0aPr\
+imary=#395B64\x0aFo\
+reground=#2C3333\
+\x0aBackground=#E7F\
+6F2\x0a\x0a\x0a[_Material\
+]\x0aTheme=Light\x0aVa\
+riant=Dense\x0aAcce\
+nt=#F97300\x0aPrima\
+ry=#524C42\x0aForeg\
+round=#32012F\x0aBa\
+ckground=#E2DFD0\
+\x0a\
 "
 
 qt_resource_name = b"\
@@ -31,7 +38,7 @@ qt_resource_struct = b"\
 \x00\x00\x00\x00\x00\x02\x00\x00\x00\x01\x00\x00\x00\x01\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\
-\x00\x00\x01\x8f.\xa0\x95%\
+\x00\x00\x01\x8f3O-\x9c\
 "
 
 def qInitResources():

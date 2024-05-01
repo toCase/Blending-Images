@@ -190,35 +190,98 @@ class CollageModel(QAbstractTableModel):
         return self.fw.getPathByURL(f)
 
 
+    # @Slot(str)
+    # def printPDF(self, fname:str):
+    #     f = self.fw.getPathByURL(fname)
+    #     printer = QPrinter()
+    #     printer.setOutputFormat(QPrinter.PdfFormat)
+    #     printer.setPageSize(QPageSize.A5)
+    #     printer.setOutputFileName(f)
+
+    #     painter = QPainter(printer)
+    #     painter.setPen(QColor(self.project_bg))
+
+    #     for r in range(0, self.project_rows, 1):
+    #         for c in range(0, self.project_cols, 1):
+    #             card = self.makeCollage(r, c)
+
+    #             x = c * 76
+    #             y = r * 85
+
+    #             if card['displayType']:
+    #                 img = QImage()
+    #                 img.load(self.fw.getPathByURL(card['display']))
+    #                 painter.drawImage(QPoint(x, y), img)
+    #             else:
+    #                 rect = QRectF(x, y, 76.0, 85.0)
+    #                 painter.drawRect(rect)
+    #                 painter.fillRect(rect, QColor(self.project_bg))
+
+
+    #     painter.end()
     @Slot(str)
-    def printPDF(self, fname:str):
+    def printPDF(self, fname: str):
         f = self.fw.getPathByURL(fname)
         printer = QPrinter()
         printer.setOutputFormat(QPrinter.PdfFormat)
-        printer.setPageSize(QPageSize.A5)
+        printer.setPageSize(QPageSize(QPageSize.A5))  # Установка размера страницы A5
         printer.setOutputFileName(f)
 
         painter = QPainter(printer)
         painter.setPen(QColor(self.project_bg))
 
-        for r in range(0, self.project_rows, 1):
-            for c in range(0, self.project_cols, 1):
+        page_width = printer.width()
+        page_height = printer.height()
+
+
+
+        # Создаем новое изображение для компоновки всех частей изображения
+        full_image = QImage(self.project_cols * 76, self.project_rows * 85, QImage.Format_RGB32)
+        full_image.fill(QColor(self.project_bg))  # Заливаем фон цветом проекта
+
+        # Проходим по всем частям изображения и рисуем их на полном изображении
+        for r in range(0, self.project_rows):
+            for c in range(0, self.project_cols):
                 card = self.makeCollage(r, c)
 
                 x = c * 76
                 y = r * 85
 
                 if card['displayType']:
-                    img = QImage()
-                    img.load(self.fw.getPathByURL(card['display']))
-                    painter.drawImage(QPoint(x, y), img)
-                else:
-                    rect = QRectF(x, y, 76.0, 85.0)
-                    painter.drawRect(rect)
-                    painter.fillRect(rect, QColor(self.project_bg))
+                    part_image = QImage()
+                    part_image.load(self.fw.getPathByURL(card['display']))
+
+                    painter = QPainter(full_image)
+                    painter.drawImage(QPoint(x, y), part_image)
+                    painter.end()
+
+        # Теперь масштабируем и центрируем полное изображение на странице A5
+        painter.begin(printer)
+        painter.setPen(QColor(self.project_bg))
+
+        # Определяем масштаб для умещения изображения в области страницы A5 с отступами
+
+        scale_factor = min(page_width / full_image.width(), page_height / full_image.height())
+        if scale_factor < 1:
+            scaled_width = full_image.width() * scale_factor
+            scaled_height = full_image.height() * scale_factor
+
+            # Рассчитываем координаты для центрирования изображения на странице A5
+            start_x = (page_width - scaled_width) / 2
+            start_y = (page_height - scaled_height) / 2
+
+            # Рисуем масштабированное и центрированное изображение на странице A5
+            painter.drawImage(QPoint(start_x, start_y), full_image.scaled(scaled_width, scaled_height, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        else:
+
+            start_x = (page_width - full_image.width()) / 2
+            start_y = (page_height - full_image.height()) / 2
+            painter.drawImage(QPoint(start_x, start_y), full_image)
+
 
 
         painter.end()
+
 
     @Slot(str)
     def saveImage(self, fname:str):

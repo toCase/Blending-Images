@@ -62,8 +62,8 @@ Pane {
 
                     text: "База"
 
-                    Material.background: "#F97300"
-                    Material.foreground: "#32012F"
+                    Material.background: clr_ORANGE
+                    Material.foreground: clr_DARK
                     Material.roundedScale: Material.ExtraSmallScale
 
                     onClicked: internal.openBaseEditor()
@@ -79,8 +79,8 @@ Pane {
 
                     text: "Проекты"
 
-                    Material.background: "#F97300"
-                    Material.foreground: "#32012F"
+                    Material.background: clr_ORANGE
+                    Material.foreground: clr_DARK
                     Material.roundedScale: Material.ExtraSmallScale
 
                     onClicked: internal.openProject()

@@ -9,10 +9,15 @@ Window {
     visible: true
     title: qsTr("Blending Images")
 
-    property color clr_ORANGE: "#FF9800"
-    property color clr_DARK: "#32012F"
-    property color clr_GREEN: "#746f67"
-    property color clr_LIGHT: "#E2DFD0"
+    // property color clr_ORANGE: "#FF9800"
+    // property color clr_DARK: "#32012F"
+    // property color clr_GREEN: "#746f67"
+    // property color clr_LIGHT: "#E2DFD0"
+
+    property color clr_ORANGE: "#A5C9CA"
+    property color clr_DARK: "#2C3333"
+    property color clr_GREEN: "#395B64"
+    property color clr_LIGHT: "#E7F6F2"
 
     property color clr_WHITE: "#FFFFFF"
     property color clr_CELL: "#C9D4C0"
