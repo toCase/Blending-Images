@@ -4,6 +4,7 @@ import QtQuick.Layouts
 
 Item {
 
+
     StackView {
         id: project_stack
         anchors.fill: parent

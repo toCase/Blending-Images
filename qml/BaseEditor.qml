@@ -5,6 +5,10 @@ import QtQuick.Layouts
 Item {
     id: baseEditor
 
+    function load() {
+        dir_selector.load()
+    }
+
     QtObject{
         id: internal
 
@@ -94,9 +98,10 @@ Item {
 
 
             BaseDirSelector{
+                id: dir_selector
                 Layout.fillWidth: true
-                Layout.minimumHeight: 120
-                Layout.maximumHeight: 120
+                Layout.minimumHeight: 140
+                Layout.maximumHeight: 140
             }
 
             GridView {
@@ -124,6 +129,7 @@ Item {
                     required property string file
                     required property bool selected
                     required property int index
+                    required property int count
 
                     border.width: 4
                     border.color:
@@ -133,17 +139,42 @@ Item {
                             clr_WHITE
                         }
 
+
+
                     Image {
                         anchors.centerIn: parent
                         width: 76
                         height: 85
                         source: file
                     }
+
+                    Rectangle {
+                        width: 30
+                        height: 18
+                        radius: 5
+
+                        visible: count
+
+
+                        anchors.top: parent.top
+                        anchors.right: parent.right
+                        anchors.rightMargin: 5
+                        anchors.topMargin: 5
+
+                        color: clr_ORANGE
+
+                        Text {
+                            anchors.centerIn: parent
+                            text: count
+                            font.pointSize: 11
+                            color: clr_LIGHT
+                        }
+                    }
                     MouseArea {
                         id: area
                         anchors.fill: parent
                         hoverEnabled: true
-                        onClicked: {                            
+                        onClicked: {
                             internal.select(index, !selected)
                         }
                         onContainsMouseChanged: {

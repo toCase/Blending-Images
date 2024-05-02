@@ -25,9 +25,11 @@ Item {
 
         function load(){
             modelEmptyFile.loadModel()
-            dir_name.text = modelEmptyFile.getFolderName()
-            info_all.text = modelEmptyFile.rowCount()
-            info_selected.text = modelEmptyFile.getSelectedCount()
+            if (modelEmptyFile.getFolderName()){
+                dir_name.text = modelEmptyFile.getFolderName()
+                info_all.text = modelEmptyFile.rowCount()
+                info_selected.text = modelEmptyFile.getSelectedCount()
+            }
         }
 
         function makeCheckIndex(i, check){

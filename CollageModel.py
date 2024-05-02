@@ -1,10 +1,12 @@
 # This Python file uses the following encoding: utf-8
-from PySide6.QtCore import QAbstractTableModel, Qt, QModelIndex, Slot, Signal, QItemSelection, QItemSelectionModel, QPoint, QRectF
+from PySide6.QtCore import QAbstractTableModel, Qt, QModelIndex, Slot, QPoint
 from PySide6.QtGui import QPainter, QColor, QImage, QPageSize
 from PySide6.QtPrintSupport import QPrinter
 from Database import Database
 from misc import FileWorker
 import platform
+
+from PIL import Image
 
 class CollageModel(QAbstractTableModel):
 
@@ -189,36 +191,6 @@ class CollageModel(QAbstractTableModel):
     def getFile(self, f:str):
         return self.fw.getPathByURL(f)
 
-
-    # @Slot(str)
-    # def printPDF(self, fname:str):
-    #     f = self.fw.getPathByURL(fname)
-    #     printer = QPrinter()
-    #     printer.setOutputFormat(QPrinter.PdfFormat)
-    #     printer.setPageSize(QPageSize.A5)
-    #     printer.setOutputFileName(f)
-
-    #     painter = QPainter(printer)
-    #     painter.setPen(QColor(self.project_bg))
-
-    #     for r in range(0, self.project_rows, 1):
-    #         for c in range(0, self.project_cols, 1):
-    #             card = self.makeCollage(r, c)
-
-    #             x = c * 76
-    #             y = r * 85
-
-    #             if card['displayType']:
-    #                 img = QImage()
-    #                 img.load(self.fw.getPathByURL(card['display']))
-    #                 painter.drawImage(QPoint(x, y), img)
-    #             else:
-    #                 rect = QRectF(x, y, 76.0, 85.0)
-    #                 painter.drawRect(rect)
-    #                 painter.fillRect(rect, QColor(self.project_bg))
-
-
-    #     painter.end()
     @Slot(str)
     def printPDF(self, fname: str):
         f = self.fw.getPathByURL(fname)
@@ -232,8 +204,6 @@ class CollageModel(QAbstractTableModel):
 
         page_width = printer.width()
         page_height = printer.height()
-
-
 
         # Создаем новое изображение для компоновки всех частей изображения
         full_image = QImage(self.project_cols * 76, self.project_rows * 85, QImage.Format_RGB32)
@@ -260,8 +230,8 @@ class CollageModel(QAbstractTableModel):
         painter.setPen(QColor(self.project_bg))
 
         # Определяем масштаб для умещения изображения в области страницы A5 с отступами
-
         scale_factor = min(page_width / full_image.width(), page_height / full_image.height())
+
         if scale_factor < 1:
             scaled_width = full_image.width() * scale_factor
             scaled_height = full_image.height() * scale_factor
@@ -277,8 +247,6 @@ class CollageModel(QAbstractTableModel):
             start_x = (page_width - full_image.width()) / 2
             start_y = (page_height - full_image.height()) / 2
             painter.drawImage(QPoint(start_x, start_y), full_image)
-
-
 
         painter.end()
 
@@ -312,12 +280,110 @@ class CollageModel(QAbstractTableModel):
         # Сохранение изображения в формате JPG
         image.save(f, "JPG")
 
+    @Slot(str)
+    def saveImagePIL(self, fname:str):
+        f = self.fw.getPathByURL(fname)
+
+        # Создание изображения с использованием Pillow
+        image = Image.new('RGB', (self.project_cols * 76, self.project_rows * 85), color=self.project_bg)
+        for r in range(self.project_rows):
+            for c in range(self.project_cols):
+                card = self.makeCollage(r, c)
+                x = c * 76
+                y = r * 85
+
+                if card['displayType']:
+                    img = Image.open(self.fw.getPathByURL(card['display']))
+                    image.paste(img, (x, y))
+        image.save(f, format='JPEG')
+
+    @Slot(str)
+    def printPillowPDF(self, fname: str):
+        f = self.fw.getPathByURL(fname)
+
+        # Создаем новое изображение для компоновки всех частей изображения
+        full_image = Image.new('RGB', (self.project_cols * 76, self.project_rows * 85), color=self.project_bg)
+
+        # Проходим по всем частям изображения и рисуем их на полном изображении
+        for r in range(0, self.project_rows):
+            for c in range(0, self.project_cols):
+                card = self.makeCollage(r, c)
+                x = c * 76
+                y = r * 85
+
+                if card['displayType']:
+                    part_image = Image.open(self.fw.getPathByURL(card['display']))
+                    full_image.paste(part_image, (x, y))
+
+        # Теперь у нас есть полное изображение с добавленными частями или прямоугольниками на фоне
+
+
+        # Проверяем размер собранного изображения и масштабируем его при необходимости
+        intend = self.getSetting() * 2
+
+        max_width = (148 - intend) * 3.7795275591  # ширина страницы A5 с отступами в 10 мм с обеих сторон
+        max_height = (210 - intend) * 3.7795275591  # высота страницы A5 с отступами в 10 мм с обеих сторон
+
+        scale_factor = min(max_width / full_image.width, max_height / full_image.height)
+
+        if scale_factor < 1:
+            # Необходимо масштабировать изображение
+
+            scaled_width = int(full_image.width * scale_factor)
+            scaled_height = int(full_image.height * scale_factor)
+
+            print("scaled_width :", scaled_width)
+            print("scaled_height :", scaled_height)
+
+            # Масштабируем изображение с сохранением пропорций
+            full_image = full_image.resize((scaled_width, scaled_height), resample=Image.LANCZOS)
+
+        full_image.save("temp", format='JPEG')
+
+        # Создаем QPrinter для печати в PDF
+        printer = QPrinter()
+        printer.setOutputFormat(QPrinter.PdfFormat)
+        printer.setPageSize(QPageSize(QPageSize.A5))  # Установка размера страницы A5
+        printer.setOutputFileName(f)
+
+        painter = QPainter(printer)
+        painter.setPen(QColor(self.project_bg))
+
+        page_width = printer.width()
+        page_height = printer.height()
+
+        # Рассчитываем координаты для центрирования изображения на странице A5
+        start_x = (page_width - full_image.width) / 2
+        start_y = (page_height - full_image.height) / 2
+
+        # Рисуем изображение на странице A5
+        print_img = QImage()
+        print_img.load("temp")
+        painter.drawImage(QPoint(start_x, start_y), print_img)
+
+        painter.end()
+        self.fw.removeTempFile()
 
     @Slot(result=bool)
     def testWin(self):
         if platform.system() == "Windows":
             return True
         return False
+
+    @Slot(result=int)
+    def getSetting(self):
+        sett = self.fw.getJsonSetting()
+        if sett["intend"] == None:
+            print("NONE")
+            return 10
+        else:
+            return sett["intend"]
+
+    @Slot(int)
+    def setSetting(self, x:int):
+        sett = {}
+        sett["intend"] = x
+        self.fw.setJsonSetting(sett)
 
 
 

@@ -36,109 +36,232 @@ Item {
 
             // canvas.save(modelCollage.getFile(fname), Qt.size(internal.img_width, internal.img_height))
 
-            modelCollage.saveImage(fileName)
+            // modelCollage.saveImage(fileName)
+            modelCollage.saveImagePIL(fileName)
 
         }
 
         function saveAsPDF(fileName){
-            modelCollage.printPDF(fileName)
+            // modelCollage.printPDF(fileName)
+            modelCollage.printPillowPDF(fileName)
+        }
+
+        function openPDFSetting(){
+            sett.visible = !sett.visible
+            sett_intent.text = String(modelCollage.getSetting())
+        }
+
+        function savePDFSetting(){
+            var x = Number(sett_intent.text)
+            modelCollage.setSetting(x)
+            sett.visible = false
+
         }
     }
 
-    RowLayout {
-        id: menu
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        height: implicitHeight
-        spacing: 10
+    ColumnLayout{
+        anchors.fill: parent
+        spacing: 5
 
-        Button {
-            id: but_close
-            Layout.minimumHeight: implicitHeight
-            Layout.maximumHeight: implicitHeight
-            Layout.minimumWidth: implicitWidth
-            Layout.maximumWidth: implicitWidth
-
-            text: "< Назад"
-
-            Material.background: clr_ORANGE
-            Material.foreground: clr_DARK
-            Material.roundedScale: Material.ExtraSmallScale
-
-            onClicked: back()
-
-        }
-        Item {
+        RowLayout {
+            id: menu
             Layout.fillWidth: true
-        }
-        Button {
-            id: but_upd
             Layout.minimumHeight: implicitHeight
             Layout.maximumHeight: implicitHeight
-            Layout.minimumWidth: implicitWidth
-            Layout.maximumWidth: implicitWidth
+            spacing: 10
 
-            text: "Сформировать"
+            Button {
+                id: but_close
+                Layout.minimumHeight: implicitHeight
+                Layout.maximumHeight: implicitHeight
+                Layout.minimumWidth: implicitWidth
+                Layout.maximumWidth: implicitWidth
 
-            Material.background: clr_ORANGE
-            Material.foreground: clr_DARK
-            Material.roundedScale: Material.ExtraSmallScale
+                text: "< Назад"
 
-            onClicked: canvas.requestPaint()
+                Material.background: clr_ORANGE
+                Material.foreground: clr_DARK
+                Material.roundedScale: Material.ExtraSmallScale
 
+                onClicked: back()
+
+            }
+            Item {
+                Layout.fillWidth: true
+            }
+            Button {
+                id: but_upd
+                Layout.minimumHeight: implicitHeight
+                Layout.maximumHeight: implicitHeight
+                Layout.minimumWidth: implicitWidth
+                Layout.maximumWidth: implicitWidth
+
+                text: "Сформировать"
+
+                Material.background: clr_ORANGE
+                Material.foreground: clr_DARK
+                Material.roundedScale: Material.ExtraSmallScale
+
+                onClicked: canvas.requestPaint()
+
+            }
+
+            Button {
+                id: but_save
+                Layout.minimumHeight: implicitHeight
+                Layout.maximumHeight: implicitHeight
+                Layout.minimumWidth: implicitWidth
+                Layout.maximumWidth: implicitWidth
+
+                text: "Сохранить JPG"
+
+                Material.background: clr_ORANGE
+                Material.foreground: clr_DARK
+                Material.roundedScale: Material.ExtraSmallScale
+
+                onClicked: fileDialogJPG.open()
+
+            }
+
+            Button {
+                id: but_pdf
+                Layout.minimumHeight: implicitHeight
+                Layout.maximumHeight: implicitHeight
+                Layout.minimumWidth: implicitWidth
+                Layout.maximumWidth: implicitWidth
+
+                text: "Сохранить PDF"
+
+                Material.background: clr_ORANGE
+                Material.foreground: clr_DARK
+                Material.roundedScale: Material.ExtraSmallScale
+
+                onClicked: fileDialogPDF.open()
+
+            }
+            Item {
+                Layout.fillWidth: true
+            }
+            Button {
+                id: but_sett_pdf
+                Layout.minimumHeight: implicitHeight
+                Layout.maximumHeight: implicitHeight
+                Layout.minimumWidth: implicitWidth
+                Layout.maximumWidth: implicitWidth
+
+                text: "Настройки PDF"
+
+                Material.background: clr_ORANGE
+                Material.foreground: clr_DARK
+                Material.roundedScale: Material.ExtraSmallScale
+
+                onClicked: {
+
+                    internal.openPDFSetting()
+                }
+            }
         }
 
-        Button {
-            id: but_save
-            Layout.minimumHeight: implicitHeight
-            Layout.maximumHeight: implicitHeight
-            Layout.minimumWidth: implicitWidth
-            Layout.maximumWidth: implicitWidth
+        Pane {
+            id: sett
+            Layout.fillWidth: true
+            Layout.minimumHeight: 60
+            Layout.maximumHeight: 60
+            visible: but_sett_pdf.checked
 
-            text: "Сохранить в файл"
+            RowLayout {
+                anchors.fill: parent
 
-            Material.background: clr_ORANGE
-            Material.foreground: clr_DARK
-            Material.roundedScale: Material.ExtraSmallScale
+                Item {
+                    Layout.fillWidth: true
+                }
 
-            onClicked: fileDialog.open()
+                Label {
+                    Layout.minimumWidth: implicitWidth
+                    Layout.maximumWidth: implicitWidth
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
 
+                    text: "Отступы для страницы PDF (mm): "
+                }
+
+                TextField {
+                    id: sett_intent
+                    Layout.minimumHeight: but_sett_save.height - 10
+                    Layout.maximumHeight: but_sett_save.height - 10
+                    Layout.minimumWidth: 100
+                    Layout.maximumWidth: 100
+
+                    validator: RegularExpressionValidator{
+                        regularExpression: /^[1-9]\d{0,1}$/
+                    }
+                    horizontalAlignment: Qt.AlignHCenter
+                    verticalAlignment: Qt.AlignVCenter
+
+                    onFocusChanged: {
+                        if (focus){
+                            selectAll()
+                        }
+                    }
+                }
+
+                Item {
+                    Layout.fillWidth: true
+                }
+
+                Button {
+                    id: but_sett_save
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
+                    Layout.minimumWidth: implicitWidth
+                    Layout.maximumWidth: implicitWidth
+
+                    text: "Сохранить"
+
+                    Material.background: clr_ORANGE
+                    Material.foreground: clr_DARK
+                    Material.roundedScale: Material.ExtraSmallScale
+
+                    onClicked: internal.savePDFSetting()
+                }
+            }
         }
 
-    }
 
-    Canvas {
-        id: canvas
-        anchors.top: menu.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
+        Pane {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
 
-        width: parent.width
-        height: parent.height
+            Canvas {
+                id: canvas
+                anchors.centerIn: parent
 
-        onPaint: {
-            var ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+                width: parent.width
+                height: parent.height
 
-            for(var r = 0; r < modelCollage.rowCount(); r++){
-                for (var c = 0; c < modelCollage.columnCount(); c++){
-                    var card = {}
-                    card = modelCollage.makeCollage(r, c)
+                onPaint: {
+                    var ctx = canvas.getContext('2d');
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                    var x = c * internal.cell_width
-                    var y = r * internal.cell_height
-                    var t = card["displayType"]
-                    var d = card["display"]
+                    for(var r = 0; r < modelCollage.rowCount(); r++){
+                        for (var c = 0; c < modelCollage.columnCount(); c++){
+                            var card = {}
+                            card = modelCollage.makeCollage(r, c)
 
-                    if (t){
-                        ctx.drawImage(d, x, y, internal.cell_width, internal.cell_height)
-                        ctx.save()
-                    } else {
-                        ctx.fillStyle = internal.img_bg
-                        ctx.fillRect(x, y, internal.cell_width, internal.cell_height)
-                        ctx.save()
+                            var x = c * internal.cell_width
+                            var y = r * internal.cell_height
+                            var t = card["displayType"]
+                            var d = card["display"]
+
+                            if (t){
+                                ctx.drawImage(d, x, y, internal.cell_width, internal.cell_height)
+                                ctx.save()
+                            } else {
+                                ctx.fillStyle = internal.img_bg
+                                ctx.fillRect(x, y, internal.cell_width, internal.cell_height)
+                                ctx.save()
+                            }
+                        }
                     }
                 }
             }
@@ -146,16 +269,16 @@ Item {
     }
 
     FileDialog {
-        id: fileDialog
-        // currentFolder: StandardPaths.standardLocations(StandardPaths.PicturesLocation)[0]
+        id: fileDialogJPG
         fileMode: FileDialog.SaveFile
-        nameFilters: ["Image file (*.jpg)", "PDF file (*.pdf)"]
-        onAccepted: {
-            if (selectedNameFilter.extensions[0] === "jpg"){
-                internal.saveAsImage(selectedFile)
-            } else {
-                internal.saveAsPDF(selectedFile)
-            }
-        }
+        nameFilters: ["Image file (*.jpg)"]
+        onAccepted: internal.saveAsImage(selectedFile)
+    }
+
+    FileDialog {
+        id: fileDialogPDF
+        fileMode: FileDialog.SaveFile
+        nameFilters: ["PDF file (*.pdf)"]
+        onAccepted: internal.saveAsPDF(selectedFile)
     }
 }

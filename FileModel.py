@@ -20,6 +20,7 @@ class FileModel(QAbstractListModel):
         self.col2 = Qt.UserRole + 2
         self.col3 = Qt.UserRole + 3
         self.col4 = Qt.UserRole + 4
+        self.col5 = Qt.UserRole + 5
 
         self.db = Database("files")
         self.worker = FileWorker("fm")
@@ -40,6 +41,8 @@ class FileModel(QAbstractListModel):
                 return self.worker.getUrl(card.get('file'))
             if role == self.col4:
                 return card.get('selected')
+            if role == self.col5:
+                return card.get('project_count')
         else:
             return str()
 
@@ -49,6 +52,7 @@ class FileModel(QAbstractListModel):
             self.col2: b"dir",
             self.col3: b"file",
             self.col4: b"selected",
+            self.col5: b"count",
         }
 
     #--------------------------
@@ -71,7 +75,7 @@ class FileModel(QAbstractListModel):
         for file in files:
 
             fw = self.worker.saveFile(file)
-            d = {'id':0, 'dir':self.dir, 'file':fw.get('file_path')}
+            d = {'id':0, 'dir':self.dir, 'file':fw.get('file_path'), 'old':fw.get('old')}
             # res = self.db.file_save(d)
             res = self.db.db_save(d, self.db.TABLE_FILES)
             if res.get('r'):
@@ -145,7 +149,7 @@ class FileModel(QAbstractListModel):
     def delete(self):
         if self.selectedCount > 0:
             for card in self.data_list:
-                if card.get('selected'):
+                if card.get('selected') and card.get('project_count') == 0:
                     self.worker.delFile(card.get('file'))
                     res = self.db.db_del(id=card.get('id'), table='Files')
                     if res.get('r'):

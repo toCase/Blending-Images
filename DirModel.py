@@ -100,20 +100,25 @@ class DirModel(QAbstractListModel):
                 self.error.emit(res.get('message'))
                 return False
 
-    @Slot(result=bool)
-    def delete(self):
+    @Slot(int, result=bool)
+    def delete(self, count:int):
         '''
         удаление раздела, через идентификатор
         - запрос удаления из БД
             успех - перезагрузка модели
             нет - сигнал ошибки
         '''
-        res = self.db.db_del(self.current, self.db.TABLE_DIRECTORY)
-        if res.get('r'):
-            self.loadModel()
+
+        if count == 0:
+            res = self.db.db_del(self.current, self.db.TABLE_DIRECTORY)
+            if res.get('r'):
+                self.loadModel()
+            else:
+                self.error.emit(res.get('message'))
+            return res.get('r')
         else:
-            self.error.emit(res.get('message'))
-        return res.get('r')
+            self.error.emit("Нельзя удалить раздел, если в нем есть файлы")
+            return False
 
     @Slot(int)
     def setCurrent(self, i: int):
@@ -121,9 +126,12 @@ class DirModel(QAbstractListModel):
             указание текущего элемента
             с сигналом изменения
             ??
-        '''
+        '''        
+
+        self.beginResetModel()
         self.current = i
         self.currentChanged.emit(i)
+        self.endResetModel()
 
     @Slot(result=int)
     def getCurrent(self):

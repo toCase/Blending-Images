@@ -4,10 +4,18 @@ import QtQuick.Layouts
 
 Item {
 
+    signal error(message:string)
+
+    function load(){
+        internal.current_idx = 0
+        dirSelector.currentIndex = 0
+        internal.select(modelDir.get(0, 'id'))
+    }
+
     QtObject {
         id: internal
 
-        property int current_idx: -1
+        property int current_idx: 0
 
         function add() {
             modelDir.setCurrent(0)
@@ -24,8 +32,16 @@ Item {
         }
 
         function del(){
-            var r = modelDir.delete()
+            var c = modelFile.rowCount()
+            var r = modelDir.delete(c)
             if (r){
+                if (modelDir.rowCount() === 0){
+                    dirSelector.currentIndex = -1
+                    modelDir.setCurrent(-1)
+                } else {
+                    dirSelector.currentIndex = 0
+                    modelDir.setCurrent(modelDir.get(0, 'id'))
+                }
                 close()
             }
         }
@@ -42,16 +58,11 @@ Item {
         function close(){
             form_directory.visible = false
 
-            if (modelDir.rowCount() === 0){
-                dirSelector.currentIndex = -1
-                modelDir.setCurrent(-1)
-            } else {
-                dirSelector.currentIndex = 0
-                modelDir.setCurrent(modelDir.get(0, 'id'))
-            }
+
         }
 
         function select(i){
+            form_directory.visible= false
             modelDir.setCurrent(i)
         }
     }
@@ -174,8 +185,8 @@ Item {
                 TextField {
                     id: dir_name
                     Layout.fillWidth: true
-                    Layout.minimumHeight: implicitHeight
-                    Layout.maximumHeight: implicitHeight
+                    Layout.minimumHeight: but_dir_save.height - 10
+                    Layout.maximumHeight: but_dir_save.height - 10
                     horizontalAlignment: Qt.AlignHCenter
                     verticalAlignment: Qt.AlignVCenter
                     placeholderText: "Название раздела"

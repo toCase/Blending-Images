@@ -11,7 +11,8 @@ Item {
     property int currentFile: 0
 
     function load(){
-
+        combo_dir.currentIndex = 0
+        modelDir.setCurrent(modelDir.get(0, 'id'))
     }
 
     QtObject {
@@ -19,25 +20,17 @@ Item {
 
         function selectFile(i, selected){
             var scrollposition = scrollTable.position
-
-            console.log("SELECTED: ", selected)
-
-
             currentFile = modelFile.selectItemOne(i, selected)
             grid.currentIndex = i
-
             scrollTable.position = scrollposition
             console.log('CURRENT FILE: ', currentFile)
-
         }
     }
 
     Connections{
         target: modelDir
         function onCurrentChanged(current){
-            console.log(current)
             modelFile.setCurrentDir(current)
-
         }
     }
 

@@ -109,8 +109,8 @@ Item {
                             onClicked:internal.selectProject(index)
                             onDoubleClicked: open(index)
                         }
-
                     }
+
 
                     Button {
                         Layout.minimumWidth: implicitWidth

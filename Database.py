@@ -10,6 +10,7 @@ class Database(QObject):
     TABLE_FILES = 'Files'
     TABLE_PROJECT = 'Projects'
     TABLE_ITEMS = 'Items'
+    TABLE_SETTING = 'Setting'
 
 
     def __init__(self, conn: str, parent = None):
@@ -26,7 +27,7 @@ class Database(QObject):
         if db.isOpen():
             qstr = [
                 "CREATE TABLE IF NOT EXISTS Directory (id INTEGER PRIMARY KEY AUTOINCREMENT, dir TEXT)",
-                "CREATE TABLE IF NOT EXISTS Files (id INTEGER PRIMARY KEY AUTOINCREMENT, dir INTEGER, file TEXT)",
+                "CREATE TABLE IF NOT EXISTS Files (id INTEGER PRIMARY KEY AUTOINCREMENT, dir INTEGER, file TEXT, old TEXT)",
                 '''CREATE TABLE IF NOT EXISTS Projects (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, width INTEGER,
                 height INTEGER, rows INTEGER, columns INTEGER, file TEXT, bg TEXT, upd INTEGER)''',
                 "CREATE TABLE IF NOT EXISTS Items(id INTEGER PRIMARY KEY AUTOINCREMENT, project INTEGER, row INTEGER, col INTEGER, file INTEGER)",
@@ -43,7 +44,16 @@ class Database(QObject):
         if db.isOpen():
             data = []
             if table == self.TABLE_FILES:
-                qstr = f"SELECT * FROM {table} WHERE {table}.dir = \'{filter}\' "
+                # qstr = f"SELECT * FROM {table} WHERE {table}.dir = \'{filter}\' "
+
+                qstr = f'''
+                SELECT Files.id, Files.dir, Files.file, COUNT(DISTINCT Items.project) AS project_count
+                FROM Files
+                LEFT JOIN Items ON Files.id = Items.file
+                LEFT JOIN Projects ON Items.project = Projects.id
+                WHERE Files.dir = \'{filter}\'
+                GROUP BY Files.id, Files.dir, Files.file
+                '''
             elif table == self.TABLE_ITEMS:
                 qstr = f"SELECT * FROM {table} WHERE {table}.project = \'{filter}\' "
             else:
@@ -78,10 +88,11 @@ class Database(QObject):
 
                 elif table == self.TABLE_FILES:
 
-                    qstr = "INSERT INTO Files (dir, file) VALUES (?, ?)"
+                    qstr = "INSERT INTO Files (dir, file, old) VALUES (?, ?, ?)"
                     query = QSqlQuery(qstr, db)
                     query.bindValue(0, card.get('dir'))
                     query.bindValue(1, card.get('file'))
+                    query.bindValue(2, card.get('old'))
 
                 elif table == self.TABLE_PROJECT:
                     qstr = "INSERT INTO Projects (name, width, height, rows, columns, file, bg, upd) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
@@ -159,10 +170,13 @@ class Database(QObject):
 
 
     # FILES------------------------
+
+    # проверка наличия файла в бд
+    # проверка по полю old
     def file_test(self, file: str):
         db = QSqlDatabase.database(self.connection_name)
         if db.isOpen():
-            qstr = "SELECT Files.id FROM Files WHERE Files.file LIKE \'%\{0}\' OR Files.file LIKE \'%/{0}\'".format(file)
+            qstr = "SELECT Files.id FROM Files WHERE Files.old = \'{0}\' ".format(file)
             query = QSqlQuery(qstr, db)
             if query.next():
                 id = int(query.value(0))
@@ -175,7 +189,7 @@ class Database(QObject):
         else:
             return False
 
-
+    # получение идентификатора по имени файла
     def getFile(self, id:int):
         db = QSqlDatabase.database(self.connection_name)
         if db.isOpen():

@@ -11,13 +11,13 @@ Pane {
 
         property int win_item: 0 // идентификатор окна
 
-        function openBase() {
-            if (win_item !== 1){
-                win_item = 1
-                app_stack.pop()
-                app_stack.push(base)
-            }
-        }
+        // function openBase() {
+        //     if (win_item !== 1){
+        //         win_item = 1
+        //         app_stack.pop()
+        //         app_stack.push(base)
+        //     }
+        // }
 
         function openProject() {
             if (win_item !== 2){
@@ -31,6 +31,7 @@ Pane {
             if (win_item !== 3){
                 win_item = 3
                 app_stack.pop()
+                base_editor.load()
                 app_stack.push(base_editor)
             }
         }
@@ -111,18 +112,18 @@ Pane {
         }
     }
 
-    Base {
-        id: base
-        visible: false
-    }
+    // Base {
+    //     id: base
+    //     visible: false
+    // }
 
-    Connections{
-        target: base
-        function onBaseEdit(idx){
-            console.info(idx)
-            internal.openBaseEditor()
-        }
-    }
+    // Connections{
+    //     target: base
+    //     function onBaseEdit(idx){
+    //         console.info(idx)
+    //         internal.openBaseEditor()
+    //     }
+    // }
 
     Projects {
         id: projects

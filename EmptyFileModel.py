@@ -19,6 +19,8 @@ class EmptyFileModel(QAbstractListModel):
     def __init__(self, parent = None):
         super().__init__(parent)
         self.worker = FileWorker('efm')
+        self.folder = None
+        self.dir_path = None
 
     @Slot()
     def rowCount(self, parent = QModelIndex):
@@ -53,8 +55,9 @@ class EmptyFileModel(QAbstractListModel):
     def loadModel(self):
         self.beginResetModel()
         self.data_list.clear()
-        self.dir_path = self.worker.getPathByURL(self.folder)
-        self.data_list = self.worker.getDataDir(self.folder)
+        if self.folder:
+            self.dir_path = self.worker.getPathByURL(self.folder)
+            self.data_list = self.worker.getDataDir(self.folder)
         self.selectedCount = 0
         self.endResetModel()
 
