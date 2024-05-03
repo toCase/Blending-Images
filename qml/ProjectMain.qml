@@ -236,7 +236,12 @@ Item {
     Connections{
         target: modelProject
         function onImgReady(idx) {
-            preview.source = "../preview" + String(idx)
+
+            // for release
+            preview.source = "preview" + String(idx)
+
+            // for debug
+            // preview.source = "../preview" + String(idx)
         }
     }
 }
