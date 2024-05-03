@@ -1,4 +1,8 @@
-# This Python file uses the following encoding: utf-8
+# Blending Images
+# ------------------------------------------
+# Модель данных для создания коллажа
+# ------------------------------------------
+
 from PySide6.QtCore import QAbstractTableModel, Qt, QModelIndex, Slot, QPoint
 from PySide6.QtGui import QPainter, QColor, QImage, QPageSize
 from PySide6.QtPrintSupport import QPrinter
@@ -28,6 +32,8 @@ class CollageModel(QAbstractTableModel):
         self.project_bg = ""
 
         self.loadModel()
+
+    # --перегрузка стандартных функций
 
     @Slot(result=int)
     def rowCount(self, parent=None):
@@ -62,10 +68,11 @@ class CollageModel(QAbstractTableModel):
         self.SELECTED:b"selected",
     }
 
-
+    # --загрузка модели -- не используем ---
     def loadModel(self):
         pass
 
+    # -- устанавливаем текущий проект
     @Slot(int, int, int, str)
     def setProject(self, project:int, rows:int, cols:int, bg:str):
         self.project = project
@@ -74,6 +81,7 @@ class CollageModel(QAbstractTableModel):
         self.project_bg = bg
         self.generateModel()
 
+    # -- генерируем модель
     def generateModel(self):
         self.beginResetModel()
 
@@ -108,6 +116,7 @@ class CollageModel(QAbstractTableModel):
         # print(self.map)
         self.endResetModel()
 
+    # -- устанавливаем текущую ячейку
     @Slot(int, int)
     def setCurrentCell(self, row:int, column:int):
         self.beginResetModel()
@@ -130,6 +139,7 @@ class CollageModel(QAbstractTableModel):
         # print (self.map)
         self.endResetModel()
 
+    # -- привязываем файл к проекту
     @Slot(int, int, int)
     def makeFile(self, row:int, column:int, file_id:int):
 
@@ -177,20 +187,24 @@ class CollageModel(QAbstractTableModel):
         else:
             print("ERROR ADD FILE: ", res['message'])
 
+    # --получить карту модели
     @Slot(int, int, result=dict)
     def makeCollage(self, row:int, column:int,):
         data_row = self.map[row]
         card = data_row.get(column)
         return card
 
+    # -- получить фон --
     @Slot(result=str)
     def getBG(self):
         return self.project_bg
 
+    # -- получить файл
     @Slot(str, result=str)
     def getFile(self, f:str):
         return self.fw.getPathByURL(f)
 
+    # --печать в ПДФ -- не используется --
     @Slot(str)
     def printPDF(self, fname: str):
         f = self.fw.getPathByURL(fname)
@@ -250,7 +264,7 @@ class CollageModel(QAbstractTableModel):
 
         painter.end()
 
-
+    # --сохранение в файл -- не используется --
     @Slot(str)
     def saveImage(self, fname:str):
         f = self.fw.getPathByURL(fname)
@@ -280,6 +294,7 @@ class CollageModel(QAbstractTableModel):
         # Сохранение изображения в формате JPG
         image.save(f, "JPG")
 
+    # -- сохранение в файл
     @Slot(str)
     def saveImagePIL(self, fname:str):
         f = self.fw.getPathByURL(fname)
@@ -297,6 +312,7 @@ class CollageModel(QAbstractTableModel):
                     image.paste(img, (x, y))
         image.save(f, format='JPEG')
 
+    # -- сохранение в ПДФ
     @Slot(str)
     def printPillowPDF(self, fname: str):
         f = self.fw.getPathByURL(fname)
@@ -364,12 +380,14 @@ class CollageModel(QAbstractTableModel):
         painter.end()
         self.fw.removeTempFile()
 
+    # -- ?? -------------
     @Slot(result=bool)
     def testWin(self):
         if platform.system() == "Windows":
             return True
         return False
 
+    # -- получить установку отступа
     @Slot(result=int)
     def getSetting(self):
         sett = self.fw.getJsonSetting()
@@ -379,6 +397,7 @@ class CollageModel(QAbstractTableModel):
         else:
             return sett["intend"]
 
+    # -- сохранить установку отступа
     @Slot(int)
     def setSetting(self, x:int):
         sett = {}

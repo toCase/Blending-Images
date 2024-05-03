@@ -23,6 +23,8 @@ class EmptyFileModel(QAbstractListModel):
         self.dir_path = None
         self.filter = None
 
+    #--перегрузка стандартных функций
+
     @Slot()
     def rowCount(self, parent = QModelIndex):
         return len(self.data_list)
@@ -48,10 +50,12 @@ class EmptyFileModel(QAbstractListModel):
             self.col3: b"saved",
         }
 
+    #--устанавливает текущую папку в формате URL
     @Slot(str)
     def setFolderUrl(self, folder: str):
         self.folder = folder
 
+    #--загрузить модель
     @Slot()
     def loadModel(self):
         self.beginResetModel()
@@ -62,7 +66,7 @@ class EmptyFileModel(QAbstractListModel):
         self.selectedCount = 0
         self.endResetModel()
 
-
+    #--выбор элемента
     @Slot(int, bool)
     def selectItem(self, index:int, selected:bool):
         self.beginResetModel()
@@ -78,6 +82,7 @@ class EmptyFileModel(QAbstractListModel):
 
         self.endResetModel()
 
+    #--выбрать все элементы модели
     @Slot()
     def selectAll(self):
         self.beginResetModel()
@@ -90,6 +95,7 @@ class EmptyFileModel(QAbstractListModel):
         self.selectedCount = len(self.data_list)
         self.endResetModel()
 
+    #--снять все выделение
     @Slot()
     def unselectAll(self):
         self.beginResetModel()
@@ -102,14 +108,17 @@ class EmptyFileModel(QAbstractListModel):
         self.selectedCount = 0
         self.endResetModel()
 
+    #--получить кол-во выбранных моделей
     @Slot(result=int)
     def getSelectedCount(self):
         return self.selectedCount
 
+    #--получить название папки
     @Slot(result=str)
     def getFolderName(self):
         return self.dir_path
 
+    #--получить список выбранных файлов
     @Slot(result=list)
     def getSelectedList(self):
         l = []
@@ -119,6 +128,7 @@ class EmptyFileModel(QAbstractListModel):
                     l.append(card['file_name'])
         return l
 
+    #--установить фильтр -- не используем --
     @Slot(str)
     def setFilter(self, f:str = None):
         self.filter = f

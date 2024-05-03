@@ -34,6 +34,8 @@ class ProjectModel(QAbstractListModel):
 
         self.loadModel()
 
+    # -- перегрузка стандартных функций
+
     @Slot(result=int)
     def rowCount(self, parent=QModelIndex):
         return len(self.data_list)
@@ -129,6 +131,7 @@ class ProjectModel(QAbstractListModel):
             self.error.emit(res.get('message'))
             return False
 
+    # --удаление элементов
     @Slot(result=bool)
     def delete(self):
         res = self.db.db_del(self.currentID, self.db.TABLE_PROJECT)
@@ -140,21 +143,25 @@ class ProjectModel(QAbstractListModel):
             self.error.emit(res.get('message'))
             return False
 
+    # -- опреление текущего элемента
     @Slot(int)
     def setCurrent(self, i: int):
         self.currentID = self.data_list[i].get('id')
         self.currentCard = self.data_list[i]
         self.makeImage()
 
+    # -- получить элемент по индексу и названию
     @Slot(int, str, result=str)
     def get(self, index:int, item:str):
         return str(self.data_list[index].get(item))
 
+    # -- установить фильтр
     @Slot(str)
     def setFilter(self, f:str):
         self.filter = f
         self.loadModel()
 
+    # -- создать превью
     def makeImage(self):
         self.fw.removePreview()
         card = self.currentCard

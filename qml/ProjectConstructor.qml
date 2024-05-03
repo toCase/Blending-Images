@@ -20,17 +20,20 @@ Item {
 
         function selectFile(i, selected){
             var scrollposition = scrollTable.position
-            currentFile = modelFile.selectItemOne(i, selected)
+            currentFile = modelX.selectItemOne(i, selected)
             grid.currentIndex = i
             scrollTable.position = scrollposition
-            console.log('CURRENT FILE: ', currentFile)
+        }
+
+        function setFilter(f){
+            modelX.setFilterKey(f)
         }
     }
 
     Connections{
         target: modelDir
         function onCurrentChanged(current){
-            modelFile.setCurrentDir(current)
+            modelX.setCurrentDir(current)
         }
     }
 
@@ -157,6 +160,18 @@ Item {
                         }
                     }
 
+                    TextField {
+                        id: filter
+
+                        Layout.fillWidth: true
+                        Layout.minimumHeight: implicitHeight
+                        Layout.maximumHeight: implicitHeight
+
+                        placeholderText: "Поиск..."
+
+                        onTextEdited: internal.setFilter(text)
+                    }
+
 
                     GridView {
                         id: grid
@@ -172,7 +187,7 @@ Item {
 
                         clip: true
 
-                        model: modelFile
+                        model: modelX
 
                         delegate: Rectangle {
                             width: grid.cellWidth - 20

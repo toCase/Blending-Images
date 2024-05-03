@@ -1,3 +1,7 @@
+# Blending Images
+# ------------------------------------------
+# Работа с файлам - работает в Windows и Linux
+# ------------------------------------------
 import platform
 from PySide6.QtCore import QObject, Slot, QUrl, QFile, QFileInfo, QDir, QDateTime, QIODevice, QJsonDocument
 from PySide6.QtGui import QImage
@@ -25,7 +29,7 @@ class FileWorker(QObject):
         self.img_width = 76
         self.img_height = 85
 
-
+    # -- сохранение файлов
     def saveFile(self, file_path:str):
         old = QFileInfo(file_path).fileName()
         file_name = str(QDateTime.currentMSecsSinceEpoch()) + ".jpg"
@@ -33,17 +37,21 @@ class FileWorker(QObject):
         r = QFile(file_path).copy(new_path.path())
         return {'r':r, 'file_path':new_path.path(), 'old':old}
 
+    # -- удаление файлов
     def delFile(self, file_path:str):
         r = QFile(file_path).remove()
         return r
 
+    # -- получение имени файла из пути
     def getNameByPath(self, file_path: str):
         return QFileInfo(file_path).fileName()
 
+    # -- получить URL пути
     @Slot(str, result=QUrl)
     def getUrl(self, path: str):
         return QUrl().fromLocalFile(path)
 
+    # -- получить путь по URL
     @Slot(result=str)
     def getPathByURL(self, folder_url: str):
         path = QUrl(folder_url).path()
@@ -51,6 +59,7 @@ class FileWorker(QObject):
             path = QUrl(folder_url).path()[1:]
         return QDir.toNativeSeparators(path)
 
+    # --получить данные папки
     def getDataDir(self, folder_url: str, file_filter: str = None):
 
         data_list = []
@@ -82,6 +91,7 @@ class FileWorker(QObject):
                 data_list.append(card)
         return data_list
 
+    # -- удаление временного файла
     def removeTempFile(self):
         self.app_dir = QDir(QDir.currentPath())
         app_files = self.app_dir.entryList(filters=QDir.Filter.Files)
@@ -92,7 +102,7 @@ class FileWorker(QObject):
             file.remove()
 
 
-
+    # -- получение данных из файла настройки
     def getJsonSetting(self):
         file = QFile("setting.json")
         sett = {}
@@ -109,6 +119,7 @@ class FileWorker(QObject):
 
         return  sett
 
+    # -- сохранение в файл настройки
     def setJsonSetting(self, d:dict):
         file = QFile("setting.json")
         if file.open(QIODevice.OpenModeFlag.ReadOnly):
@@ -126,6 +137,7 @@ class FileWorker(QObject):
             file.write(doc.toJson())
             file.close()
 
+    # -- установление первоначальных настроек
     def makeJsonSetting(self):
         file = QFile("setting.json")
         doc = QJsonDocument()
@@ -137,6 +149,7 @@ class FileWorker(QObject):
             file.write(doc.toJson())
             file.close()
 
+    # -- удаление файлов превью
     def removePreview(self):
         filters = ['preview*',]
         app_files = self.app_dir.entryList(filters, QDir.Filter.Files)
@@ -144,6 +157,7 @@ class FileWorker(QObject):
             f = QFile(file)
             f.remove()
 
+    # --???
     def getAppDir(self):
         return self.app_dir
 

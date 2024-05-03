@@ -40,8 +40,11 @@ if __name__ == "__main__":
     dirModel = DirModel.DirModel()
     engine.rootContext().setContextProperty("modelDir", dirModel)
 
-    fileModel = FileModel.FileModel()
+    fileModel = FileModel.FileModel("f1")
     engine.rootContext().setContextProperty("modelFile", fileModel)
+
+    fileXModel = FileModel.FileModel("f2")
+    engine.rootContext().setContextProperty("modelX", fileXModel)
 
     emptyFileModel = EmptyFileModel.EmptyFileModel()
     engine.rootContext().setContextProperty("modelEmptyFile", emptyFileModel)

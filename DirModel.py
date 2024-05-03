@@ -3,7 +3,7 @@
 # Модель данных для работы с директориями
 # ------------------------------------------
 
-from PySide6.QtCore import QAbstractListModel, QModelIndex, Qt, Signal, Slot, QDir
+from PySide6.QtCore import QAbstractListModel, QModelIndex, Qt, Signal, Slot
 
 from Database import Database
 

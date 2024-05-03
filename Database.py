@@ -1,4 +1,8 @@
-# This Python file uses the following encoding: utf-8
+# Blending Images
+# ------------------------------------------
+# Работа с бд
+# ------------------------------------------
+
 from PySide6.QtCore import QObject, QDate
 from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
@@ -39,7 +43,7 @@ class Database(QObject):
     # GENERAL FUNCTION
 
     # получение данных
-    def db_get(self, table: str, filter = None):
+    def db_get(self, table: str, filter = None, key = None):
         db = QSqlDatabase.database(self.connection_name)
         if db.isOpen():
             data = []
@@ -47,21 +51,26 @@ class Database(QObject):
                 # qstr = f"SELECT * FROM {table} WHERE {table}.dir = \'{filter}\' "
 
                 qstr = f'''
-                SELECT Files.id, Files.dir, Files.file, COUNT(DISTINCT Items.project) AS project_count
+                SELECT Files.id, Files.dir, Files.file, Files.old, COUNT(DISTINCT Items.project) AS project_count
                 FROM Files
                 LEFT JOIN Items ON Files.id = Items.file
                 LEFT JOIN Projects ON Items.project = Projects.id
-                WHERE Files.dir = \'{filter}\'
-                GROUP BY Files.id, Files.dir, Files.file
-                '''
+                WHERE (Files.dir = \'{filter}\') '''
+
+                if key:
+                    qstr = qstr + f"AND (Files.`old` LIKE \'%{key}%\') "
+
+                qstr = qstr + "GROUP BY Files.id, Files.dir, Files.file"
+
             elif table == self.TABLE_ITEMS:
-                qstr = f"SELECT * FROM {table} WHERE {table}.project = \'{filter}\' "
+                qstr = f"SELECT * FROM Items WHERE Items.project = \'{filter}\' "
+
             elif table == self.TABLE_PROJECT and filter:
                 qstr = f"SELECT * FROM {table} WHERE {table}.name LIKE \'%{filter}%\' "
             else:
                 qstr = f"SELECT * FROM {table} "
 
-            query = QSqlQuery(qstr, db)
+            query = QSqlQuery(qstr, db)            
             while query.next():
                 d = {}
                 for i in range(0, query.record().count()):
