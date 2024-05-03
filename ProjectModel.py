@@ -2,7 +2,7 @@
 # ------------------------------------------
 # Модель данных для работы с проектами
 # ------------------------------------------
-from PySide6.QtCore import QAbstractListModel, QModelIndex, Qt, Signal, Slot, QPoint
+from PySide6.QtCore import QAbstractListModel, QModelIndex, Qt, Signal, Slot, QPoint, QDir, QUrl
 from PySide6.QtGui import QPainter, QColor, QImage
 from Database import Database
 from misc import FileWorker
@@ -10,7 +10,7 @@ from misc import FileWorker
 class ProjectModel(QAbstractListModel):
 
     error = Signal(str, arguments=['error'])
-    imgReady = Signal(int, arguments=['idx'])
+    imgReady = Signal(QUrl, arguments=['file'])
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -200,7 +200,10 @@ class ProjectModel(QAbstractListModel):
 
         painter.end()
         r = image.save("preview" + str(self.currentID) + ".png", "PNG")
-        self.imgReady.emit(self.currentID)
+
+        pd = QDir(QDir.toNativeSeparators(QDir.currentPath() + "/preview" + str(self.currentID) + ".png"))
+
+        self.imgReady.emit(self.fw.getUrl(pd.path()))
 
 
 

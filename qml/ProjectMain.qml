@@ -235,13 +235,9 @@ Item {
 
     Connections{
         target: modelProject
-        function onImgReady(idx) {
-
-            // for release
-            preview.source = "preview" + String(idx)
-
-            // for debug
-            // preview.source = "../preview" + String(idx)
+        function onImgReady(file) {
+            console.log("F:", file)
+            preview.source = file
         }
     }
 }

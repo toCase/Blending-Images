@@ -144,6 +144,9 @@ class FileWorker(QObject):
             f = QFile(file)
             f.remove()
 
+    def getAppDir(self):
+        return self.app_dir
+
 
 
 
