@@ -2,17 +2,21 @@
 # ------------------------------------------
 # Модель данных для работы с проектами
 # ------------------------------------------
-from PySide6.QtCore import QAbstractListModel, QModelIndex, Qt, Signal, Slot
+from PySide6.QtCore import QAbstractListModel, QModelIndex, Qt, Signal, Slot, QPoint
+from PySide6.QtGui import QPainter, QColor, QImage
 from Database import Database
+from misc import FileWorker
 
 class ProjectModel(QAbstractListModel):
 
     error = Signal(str, arguments=['error'])
+    imgReady = Signal(int, arguments=['idx'])
 
     def __init__(self, parent=None):
         super().__init__(parent)
 
         self.db = Database('prj')
+        self.fw = FileWorker("PMFW")
 
         self.data_list = []
 
@@ -25,6 +29,8 @@ class ProjectModel(QAbstractListModel):
         self.col7 = Qt.UserRole + 7
         self.col8 = Qt.UserRole + 8
         self.col9 = Qt.UserRole + 9
+
+        self.filter = None
 
         self.loadModel()
 
@@ -76,7 +82,7 @@ class ProjectModel(QAbstractListModel):
         self.beginResetModel()
         self.data_list.clear()
 
-        res = self.db.db_get(self.db.TABLE_PROJECT)
+        res = self.db.db_get(self.db.TABLE_PROJECT, self.filter)
         if res.get('r'):
             self.data_list = res.get('data')
         else:
@@ -137,10 +143,65 @@ class ProjectModel(QAbstractListModel):
     @Slot(int)
     def setCurrent(self, i: int):
         self.currentID = self.data_list[i].get('id')
+        self.currentCard = self.data_list[i]
+        self.makeImage()
 
     @Slot(int, str, result=str)
     def get(self, index:int, item:str):
         return str(self.data_list[index].get(item))
+
+    @Slot(str)
+    def setFilter(self, f:str):
+        self.filter = f
+        self.loadModel()
+
+    def makeImage(self):
+        self.fw.removePreview()
+        card = self.currentCard
+        map_items = []
+        x = self.db.db_get(self.db.TABLE_ITEMS, card.get('id'))
+        if x['r']:
+            _data = x['data']
+
+            for r in range (0, card.get('rows'), 1):
+                _row = {}
+                for item in _data:
+                    if item['row'] == r:
+                        _id = item['id']
+                        _file = item['file']
+                        if _file == 0:
+                            _type = False
+                            _display = card.get('bg')
+                        else:
+                           _type = True
+                           _display = self.fw.getUrl(self.db.getFile(_file))
+
+                        _row[item['col']] = {'id':_id, 'file':_file, 'displayType':_type, 'display': _display, 'selected': False}
+                map_items.append(_row)
+
+        # Создание изображения размером, соответствующим вашему проекту
+        image = QImage(card.get('columns') * 76, card.get('rows') * 85, QImage.Format_RGB32)
+        image.fill(QColor(card.get('bg')))  # Заливка фона цветом проекта
+
+        painter = QPainter(image)
+        for r in range(0, card.get('rows')):
+            data_row = map_items[r]
+
+            for c in range(0, card.get('columns')):
+
+                card_item = data_row.get(c)
+                x = c * 76
+                y = r * 85
+
+                if card_item['displayType']:
+                    img = QImage()
+                    img.load(self.fw.getPathByURL(card_item['display']))
+                    painter.drawImage(QPoint(x, y), img)
+
+        painter.end()
+        r = image.save("preview" + str(self.currentID), "JPG")
+        self.imgReady.emit(self.currentID)
+
 
 
 

@@ -50,6 +50,14 @@ Item {
             modelEmptyFile.unselectAll()
             info_selected.text = modelEmptyFile.getSelectedCount()
         }
+
+        function makeFilter(f){
+            if (f.lenght > 0){
+                modelEmptyFile.setFilter()
+            } else {
+                modelEmptyFile.setFilter(f)
+            }
+        }
     }
 
     ColumnLayout {
@@ -108,6 +116,53 @@ Item {
                 }
             }
         }
+
+        // RowLayout {
+        //     Layout.fillWidth: true
+        //     Layout.minimumHeight: implicitHeight
+        //     Layout.maximumHeight: implicitHeight
+        //     spacing: 5
+
+        //     Label {
+        //         Layout.minimumWidth: implicitWidth
+        //         Layout.maximumWidth: implicitWidth
+        //         Layout.minimumHeight: implicitHeight
+        //         Layout.maximumHeight: implicitHeight
+        //         text: "Поиск: "
+        //         horizontalAlignment: Qt.AlignHCenter
+        //         verticalAlignment: Qt.AlignVCenter
+        //     }
+
+        //     TextField {
+        //         id: dir_filter
+
+        //         Layout.fillWidth: true
+        //         Layout.minimumHeight: but_clear.height - 10
+        //         Layout.maximumHeight: but_clear.height - 10
+
+        //         horizontalAlignment: Qt.AlignHCenter
+        //         verticalAlignment: Qt.AlignVCenter
+
+        //         onTextEdited: internal.makeFilter(text)
+        //     }
+
+        //     Button {
+        //         id: but_clear
+
+        //         Layout.minimumWidth: implicitWidth
+        //         Layout.maximumWidth: implicitWidth
+        //         Layout.minimumHeight: implicitHeight
+        //         Layout.maximumHeight: implicitHeight
+
+        //         text: "<X"
+
+        //         Material.background: clr_ORANGE
+        //         Material.foreground: clr_DARK
+        //         Material.roundedScale: Material.ExtraSmallScale
+
+        //         onClicked: dir_filter.clear()
+        //     }
+        // }
 
 
         GridView {

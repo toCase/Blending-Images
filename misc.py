@@ -51,7 +51,7 @@ class FileWorker(QObject):
             path = QUrl(folder_url).path()[1:]
         return QDir.toNativeSeparators(path)
 
-    def getDataDir(self, folder_url: str):
+    def getDataDir(self, folder_url: str, file_filter: str = None):
 
         data_list = []
 
@@ -59,6 +59,9 @@ class FileWorker(QObject):
 
         dir = QDir(dir_path)
         filters = ['*.jpg',]
+        if file_filter:
+            filters = [f'*{file_filter}*.jpg',]
+
         files = dir.entryList(filters, QDir.Filter.Files)
 
         for file in files:
@@ -133,6 +136,14 @@ class FileWorker(QObject):
         if file.open(QIODevice.OpenModeFlag.WriteOnly | QFile.OpenModeFlag.Text | QFile.OpenModeFlag.Truncate):
             file.write(doc.toJson())
             file.close()
+
+    def removePreview(self):
+        filters = ['preview*',]
+        app_files = self.app_dir.entryList(filters, QDir.Filter.Files)
+        for file in app_files:
+            f = QFile(file)
+            f.remove()
+
 
 
 

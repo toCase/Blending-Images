@@ -56,6 +56,8 @@ class Database(QObject):
                 '''
             elif table == self.TABLE_ITEMS:
                 qstr = f"SELECT * FROM {table} WHERE {table}.project = \'{filter}\' "
+            elif table == self.TABLE_PROJECT and filter:
+                qstr = f"SELECT * FROM {table} WHERE {table}.name LIKE \'%{filter}%\' "
             else:
                 qstr = f"SELECT * FROM {table} "
 

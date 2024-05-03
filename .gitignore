@@ -4,4 +4,5 @@ __pycache__/
 base.db3
 BlendingImages.pyproject.user
 Base/
+preview*
 

@@ -28,6 +28,21 @@ Item {
                 selectProject(0)
             }
         }
+
+        function filterEdit(f){
+            if (f.length > 0){
+                but_clearF.visible = true
+            } else {
+                but_clearF.visible = false
+            }
+            modelProject.setFilter(f)
+        }
+
+        function filterClear(){
+            modelProject.setFilter("")
+            filter.clear()
+            but_clearF.visible = false
+        }
     }
 
     ColumnLayout {
@@ -41,12 +56,13 @@ Item {
 
             RowLayout {
                 anchors.fill: parent
-                spacing: 10
+                spacing: 1
 
                 Button {
                     id: but_create
-                    Layout.minimumWidth: 120
-                    Layout.maximumWidth: 120
+                    Layout.leftMargin: 50
+                    Layout.minimumWidth: 150
+                    Layout.maximumWidth: 150
                     // Layout.maximumWidth: implicitWidth
                     Layout.minimumHeight: implicitHeight
                     Layout.maximumHeight: implicitHeight
@@ -70,66 +86,118 @@ Item {
                     horizontalAlignment: Qt.AlignHCenter
                     verticalAlignment: Qt.AlignVCenter
                 }
+                Item {
+                    Layout.fillWidth: true
+                }
+
+                TextField {
+                    id: filter
+                    Layout.minimumWidth: 250
+                    Layout.maximumWidth: 250
+                    Layout.minimumHeight: but_create.height - 10
+                    Layout.maximumHeight: but_create.height - 10
+
+                    placeholderText: "Поиск..."
+
+                    onTextEdited: internal.filterEdit(filter.text)
+                }
+
+                ToolButton {
+                    id: but_clearF
+
+                    visible: false
+
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumHeight: implicitHeight
+                    Layout.minimumWidth: implicitWidth
+                    Layout.maximumWidth: implicitWidth
+
+                    text: "X"
+
+                    onClicked: internal.filterClear()
+
+                }
             }
         }
 
-        ListView {
-            id: project_list
-            Layout.leftMargin: but_create.width + 20
-            Layout.rightMargin: 20
+        RowLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
+            spacing: 5
 
-            clip:true
-
-            model: modelProject
-            delegate: Item {
-                height: 40
-                width: project_list.width
-
-                required property int index
-                required property string name
-
-                RowLayout{
-                    anchors.fill: parent
-                    spacing: 10
-
-                    Label {
-                        Layout.fillHeight: true
-                        Layout.fillWidth: true
-                        Layout.leftMargin: 25
-
-                        text: name
-                        horizontalAlignment: Qt.AlignLeft
-                        verticalAlignment: Qt.AlignVCenter
-                        font.pointSize: 13
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked:internal.selectProject(index)
-                            onDoubleClicked: open(index)
-                        }
-                    }
+            Image {
+                id: preview
 
 
-                    Button {
-                        Layout.minimumWidth: implicitWidth
-                        Layout.maximumWidth: implicitWidth
-                        Layout.fillHeight: true
-                        flat: true
-                        text: '\u22EE'
+                Layout.minimumWidth: 250
+                Layout.maximumWidth: 250
 
-                        Material.roundedScale: Material.ExtraSmallScale
+                Layout.minimumHeight: 300
+                Layout.maximumHeight: 300
+                Layout.alignment: Qt.AlignBottom
 
-                        onClicked: edit(index)
-                    }
-                }
+                fillMode: Image.PreserveAspectFit
+                smooth: true
+                cache: false
             }
 
-            highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
-            highlightMoveDuration: 0
-            highlightMoveVelocity: 10
-            focus: true
+            ListView {
+                id: project_list
+                Layout.rightMargin: 20
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                clip:true
+
+                model: modelProject
+                delegate: Item {
+                    height: 40
+                    width: project_list.width
+
+                    required property int index
+                    required property string name
+
+                    RowLayout{
+                        anchors.fill: parent
+                        spacing: 10
+
+                        Label {
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                            Layout.leftMargin: 25
+
+                            text: name
+                            horizontalAlignment: Qt.AlignLeft
+                            verticalAlignment: Qt.AlignVCenter
+                            font.pointSize: 13
+
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked:internal.selectProject(index)
+                                onDoubleClicked: open(index)
+                            }
+                        }
+
+
+                        Button {
+                            Layout.minimumWidth: implicitWidth
+                            Layout.maximumWidth: implicitWidth
+                            Layout.fillHeight: true
+                            flat: true
+                            text: '\u22EE'
+
+                            Material.roundedScale: Material.ExtraSmallScale
+
+                            onClicked: edit(index)
+                        }
+                    }
+                }
+
+                highlight: Rectangle { color: clr_ORANGE; radius: 5 }
+                highlightMoveDuration: 0
+                highlightMoveVelocity: 10
+                focus: true
+            }
         }
 
         Pane {
@@ -143,8 +211,9 @@ Item {
 
                 Button {
                     id: but_del
-                    Layout.minimumWidth: 120
-                    Layout.maximumWidth: 120
+                    Layout.leftMargin: 50
+                    Layout.minimumWidth: 150
+                    Layout.maximumWidth: 150
                     Layout.minimumHeight: implicitHeight
                     Layout.maximumHeight: implicitHeight
 
@@ -161,6 +230,13 @@ Item {
                     Layout.fillWidth: true
                 }
             }
+        }
+    }
+
+    Connections{
+        target: modelProject
+        function onImgReady(idx) {
+            preview.source = "../preview" + String(idx)
         }
     }
 }
