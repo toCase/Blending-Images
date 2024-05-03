@@ -25,10 +25,10 @@ Item {
         }
 
         function edit(i){
-            modelDir.setCurrent(i)
             dir_name.text = modelDir.get(current_idx, 'dir')
             but_dir_del.visible = true
             form_directory.visible = true
+            modelDir.setCurrent(i)
         }
 
         function del(){
@@ -119,7 +119,6 @@ Item {
                             onDoubleClicked: {
                                 dirSelector.currentIndex = index
                                 internal.current_idx = index
-                                internal.select(id)
                                 internal.edit(id)
                             }
 

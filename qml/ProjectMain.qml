@@ -197,6 +197,7 @@ Item {
                 highlightMoveDuration: 0
                 highlightMoveVelocity: 10
                 focus: true
+                ScrollBar.vertical: ScrollBar{}
             }
         }
 
@@ -236,7 +237,6 @@ Item {
     Connections{
         target: modelProject
         function onImgReady(file) {
-            console.log("F:", file)
             preview.source = file
         }
     }
