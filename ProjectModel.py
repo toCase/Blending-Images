@@ -199,7 +199,7 @@ class ProjectModel(QAbstractListModel):
                     painter.drawImage(QPoint(x, y), img)
 
         painter.end()
-        r = image.save("preview" + str(self.currentID), "JPG")
+        r = image.save("preview" + str(self.currentID) + ".png", "PNG")
         self.imgReady.emit(self.currentID)
 
 
