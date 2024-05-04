@@ -8,11 +8,15 @@ Item {
     signal back()
 
     function load() {
-        canvas.requestPaint()
+        // canvas.requestPaint()
 
-        internal.img_width = modelCollage.columnCount() * internal.cell_width
-        internal.img_height = modelCollage.rowCount() * internal.cell_height
-        internal.img_bg = modelCollage.getBG()
+        // internal.img_width = modelCollage.columnCount() * internal.cell_width
+        // internal.img_height = modelCollage.rowCount() * internal.cell_height
+        // internal.img_bg = modelCollage.getBG()
+
+        img_preview.source = ""
+        img_preview.source = modelCollage.getPreviewUrl()
+
     }
 
 
@@ -28,21 +32,10 @@ Item {
         property string img_bg: ""
 
         function saveAsImage(fileName){
-            // var win = modelCollage.testWin()
-            // var fname = fileName + ".jpg"
-            // if (win) {
-            //     fname = fileName
-            // }
-
-            // canvas.save(modelCollage.getFile(fname), Qt.size(internal.img_width, internal.img_height))
-
-            // modelCollage.saveImage(fileName)
-            modelCollage.saveImagePIL(fileName)
-
+            modelCollage.saveImagePIL(fileName, false)
         }
 
         function saveAsPDF(fileName){
-            // modelCollage.printPDF(fileName)
             modelCollage.printPillowPDF(fileName)
         }
 
@@ -89,22 +82,22 @@ Item {
             Item {
                 Layout.fillWidth: true
             }
-            Button {
-                id: but_upd
-                Layout.minimumHeight: implicitHeight
-                Layout.maximumHeight: implicitHeight
-                Layout.minimumWidth: implicitWidth
-                Layout.maximumWidth: implicitWidth
+            // Button {
+            //     id: but_upd
+            //     Layout.minimumHeight: implicitHeight
+            //     Layout.maximumHeight: implicitHeight
+            //     Layout.minimumWidth: implicitWidth
+            //     Layout.maximumWidth: implicitWidth
 
-                text: "Сформировать"
+            //     text: "Сформировать"
 
-                Material.background: clr_ORANGE
-                Material.foreground: clr_DARK
-                Material.roundedScale: Material.ExtraSmallScale
+            //     Material.background: clr_ORANGE
+            //     Material.foreground: clr_DARK
+            //     Material.roundedScale: Material.ExtraSmallScale
 
-                onClicked: canvas.requestPaint()
+            //     onClicked: canvas.requestPaint()
 
-            }
+            // }
 
             Button {
                 id: but_save
@@ -228,43 +221,69 @@ Item {
         }
 
 
-        Pane {
+        // Pane {
+        //     Layout.fillWidth: true
+        //     Layout.fillHeight: true
+
+        //     Canvas {
+        //         id: canvas
+        //         anchors.centerIn: parent
+
+        //         width: parent.width
+        //         height: parent.height
+
+        //         onPaint: {
+        //             var ctx = canvas.getContext('2d');
+        //             ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        //             for(var r = 0; r < modelCollage.rowCount(); r++){
+        //                 for (var c = 0; c < modelCollage.columnCount(); c++){
+        //                     var card = {}
+        //                     card = modelCollage.makeCollage(r, c)
+
+        //                     var x = c * internal.cell_width
+        //                     var y = r * internal.cell_height
+        //                     var t = card["displayType"]
+        //                     var d = card["display"]
+
+        //                     if (t){
+        //                         ctx.drawImage(d, x, y, internal.cell_width, internal.cell_height)
+        //                         ctx.save()
+        //                     } else {
+        //                         ctx.fillStyle = internal.img_bg
+        //                         ctx.fillRect(x, y, internal.cell_width, internal.cell_height)
+        //                         ctx.save()
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+
+
+        // }
+        ScrollView {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            Canvas {
-                id: canvas
-                anchors.centerIn: parent
+            Image {
+                id: img_preview
+                anchors.top: parent.top
+                anchors.left: parent.left
 
-                width: parent.width
-                height: parent.height
+                width: implicitWidth
+                height: implicitHeight
 
-                onPaint: {
-                    var ctx = canvas.getContext('2d');
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                    for(var r = 0; r < modelCollage.rowCount(); r++){
-                        for (var c = 0; c < modelCollage.columnCount(); c++){
-                            var card = {}
-                            card = modelCollage.makeCollage(r, c)
-
-                            var x = c * internal.cell_width
-                            var y = r * internal.cell_height
-                            var t = card["displayType"]
-                            var d = card["display"]
-
-                            if (t){
-                                ctx.drawImage(d, x, y, internal.cell_width, internal.cell_height)
-                                ctx.save()
-                            } else {
-                                ctx.fillStyle = internal.img_bg
-                                ctx.fillRect(x, y, internal.cell_width, internal.cell_height)
-                                ctx.save()
-                            }
-                        }
-                    }
-                }
+                cache: false
             }
+        }
+    }
+
+    Connections {
+        target: modelCollage
+        function onPreviewReady(){
+            console.log("READY")
+            img_preview.source = ""
+            img_preview.source = modelCollage.getPreviewUrl()
         }
     }
 

@@ -28,6 +28,11 @@ Item {
         function setFilter(f){
             modelX.setFilterKey(f)
         }
+
+        function makePreview(){
+            modelCollage.saveImagePIL("preview", true)
+            preview()
+        }
     }
 
     Connections{
@@ -78,7 +83,7 @@ Item {
                     Material.foreground: clr_DARK
                     Material.roundedScale: Material.ExtraSmallScale
 
-                    onClicked: preview()
+                    onClicked: internal.makePreview()
                 }
 
                 Item {

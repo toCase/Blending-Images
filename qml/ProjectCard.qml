@@ -16,11 +16,11 @@ Item {
             cardID = 0
             project_name.text = ""
             project_name.focus = true
-            bg = "#96c3c4"
-            card_col.text = 1
-            card_row.text = 1
-            card_height.text = 85
-            card_width.text = 76
+            bg = "#ffffff"
+            card_col.text = 8
+            card_row.text = 8
+            card_height.text = 85 * 8
+            card_width.text = 76 * 8
         } else {
             cardID = Number(modelProject.get(i, "id"))
             project_name.text = modelProject.get(i, "name")

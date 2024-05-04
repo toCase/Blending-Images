@@ -3,7 +3,7 @@
 # Модель данных для создания коллажа
 # ------------------------------------------
 
-from PySide6.QtCore import QAbstractTableModel, Qt, QModelIndex, Slot, QPoint
+from PySide6.QtCore import QAbstractTableModel, Qt, QModelIndex, Signal, Slot, QPoint, QUrl
 from PySide6.QtGui import QPainter, QColor, QImage, QPageSize
 from PySide6.QtPrintSupport import QPrinter
 from Database import Database
@@ -18,6 +18,8 @@ class CollageModel(QAbstractTableModel):
     DISPLAY_TYPE = Qt.UserRole + 1
     ID = Qt.UserRole + 2
     SELECTED = Qt.UserRole + 3
+
+    previewReady = Signal()
 
 
     def __init__(self, parent=None):
@@ -295,9 +297,13 @@ class CollageModel(QAbstractTableModel):
         image.save(f, "JPG")
 
     # -- сохранение в файл
-    @Slot(str)
-    def saveImagePIL(self, fname:str):
-        f = self.fw.getPathByURL(fname)
+    @Slot(str, bool)
+    def saveImagePIL(self, fname:str, preview:bool = False):
+        if preview:
+            f = self.fw.getPathByURL(self.fw.getProjectDirPath(self.project))
+        else:
+            f = self.fw.getPathByURL(fname)
+        print(f)
 
         # Создание изображения с использованием Pillow
         image = Image.new('RGB', (self.project_cols * 76, self.project_rows * 85), color=self.project_bg)
@@ -311,6 +317,8 @@ class CollageModel(QAbstractTableModel):
                     img = Image.open(self.fw.getPathByURL(card['display']))
                     image.paste(img, (x, y))
         image.save(f, format='JPEG')
+        if preview:
+            self.previewReady.emit()
 
     # -- сохранение в ПДФ
     @Slot(str)
@@ -403,6 +411,11 @@ class CollageModel(QAbstractTableModel):
         sett = {}
         sett["intend"] = x
         self.fw.setJsonSetting(sett)
+
+    #
+    @Slot(result=QUrl)
+    def getPreviewUrl(self):
+        return self.fw.getProjectDirPath(self.project)
 
 
 

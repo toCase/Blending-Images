@@ -18,13 +18,22 @@ class FileWorker(QObject):
         app_dirs = self.app_dir.entryList(filters=QDir.Filter.Dirs)
         if "Base" not in app_dirs:
             self.app_dir.mkdir("Base")
+            self.base_dir = QDir(QDir.toNativeSeparators(self.app_dir.path() + '/Base'))
+            self.base_dir.mkdir("Projects")
+            self.project_dir = QDir(QDir.toNativeSeparators(self.base_dir.path() + '/Projects'))
+        else:
+            self.base_dir = QDir(QDir.toNativeSeparators(self.app_dir.path() + '/Base'))
+            base_dirs = self.base_dir.entryList(filters=QDir.Filter.Dirs)
+            if "Projects" not in base_dirs:
+                self.base_dir.mkdir("Projects")
+                self.project_dir = QDir(QDir.toNativeSeparators(self.base_dir.path() + '/Projects'))
+            else:
+                self.project_dir = QDir(QDir.toNativeSeparators(self.base_dir.path() + '/Projects'))
 
         app_files = self.app_dir.entryList(filters=QDir.Filter.Files)
         if "setting.json" not in app_files:
             self.makeJsonSetting()
 
-
-        self.base_dir = QDir(QDir.toNativeSeparators(self.app_dir.path() + '/Base'))
         self.db = Database(conn)
         self.img_width = 76
         self.img_height = 85
@@ -160,6 +169,15 @@ class FileWorker(QObject):
     # --???
     def getAppDir(self):
         return self.app_dir
+
+    # --получить адрес для файла просмотра
+    def getProjectDirPath(self, id:int):
+        project_url = QUrl.fromLocalFile(self.project_dir.path() + f"/p{id}.jpeg")
+        return project_url
+
+    def deleleProjectPreview(self, id:int):
+        file = QFile(self.project_dir.path() + f"/p{id}.jpeg")
+        file.remove()
 
 
 

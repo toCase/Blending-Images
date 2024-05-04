@@ -137,6 +137,7 @@ class ProjectModel(QAbstractListModel):
         res = self.db.db_del(self.currentID, self.db.TABLE_PROJECT)
         if res.get('r'):
             self.db.db_del(0, self.db.TABLE_ITEMS, self.currentID)
+            self.fw.deleleProjectPreview(self.currentID)
             self.loadModel()
             return True
         else:

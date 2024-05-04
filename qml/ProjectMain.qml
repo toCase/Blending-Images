@@ -22,6 +22,8 @@ Item {
         }
 
         function delProject(){
+            preview.source = ""
+
             var r = modelProject.delete()
             var count = modelProject.rowCount()
             if (r === true & count > 0) {
