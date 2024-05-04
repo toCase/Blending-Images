@@ -175,6 +175,7 @@ class FileWorker(QObject):
         project_url = QUrl.fromLocalFile(self.project_dir.path() + f"/p{id}.jpeg")
         return project_url
 
+    # --удалить файла просмотра
     def deleleProjectPreview(self, id:int):
         file = QFile(self.project_dir.path() + f"/p{id}.jpeg")
         file.remove()
