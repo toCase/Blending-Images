@@ -139,10 +139,13 @@ class Database(QObject):
                     qstr = "UPDATE Files SET dir = \'{}\', file = \'{}\' WHERE Files.id = \'{}\'".format(card.get('dir'), card.get('file'), id)
 
                 elif table == self.TABLE_PROJECT:
-                    qstr = '''UPDATE Projects SET name = \'{}\', width = \'{}\', height = \'{}\', rows = \'{}\',
-                    columns = \'{}\', file = \'{}\', bg = \'{}\' WHERE Projects.id = \'{}\' '''.format(
-                        card.get('name'), card.get('width'), card.get('height'), card.get('rows'), card.get('columns'),
-                        card.get('file'), card.get('bg'), id)
+                    qstr = '''UPDATE Projects SET name = \'{}\',  bg = \'{}\' WHERE Projects.id = \'{}\' '''.format(
+                        card.get('name'),  card.get('bg'), id)
+                    # qstr = '''UPDATE Projects SET name = \'{}\', width = \'{}\', height = \'{}\', rows = \'{}\',
+                    # columns = \'{}\', file = \'{}\', bg = \'{}\' WHERE Projects.id = \'{}\' '''.format(
+                    #     card.get('name'), card.get('width'), card.get('height'), card.get('rows'), card.get('columns'),
+                    #     card.get('file'), card.get('bg'), id)
+
                 elif table == self.TABLE_ITEMS:
                     qstr = '''UPDATE Items SET project = \'{}\', row = \'{}\', col = \'{}\', file = \'{}\'
                     WHERE Items.id = \'{}\' '''.format(card.get('project'), card.get('row'), card.get('col'), card.get('file'), id)

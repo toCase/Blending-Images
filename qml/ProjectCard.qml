@@ -21,6 +21,9 @@ Item {
             card_row.text = 8
             card_height.text = 85 * 8
             card_width.text = 76 * 8
+
+            card_col.readOnly = false
+            card_row.readOnly = false
         } else {
             cardID = Number(modelProject.get(i, "id"))
             project_name.text = modelProject.get(i, "name")
@@ -29,6 +32,9 @@ Item {
             card_width.text = Number(modelProject.get(i, "width"))
             card_height.text = Number(modelProject.get(i, "height"))
             bg = modelProject.get(i, "bg")
+
+            card_col.readOnly = true
+            card_row.readOnly = true
         }
 
     }

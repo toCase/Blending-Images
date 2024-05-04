@@ -281,7 +281,6 @@ Item {
     Connections {
         target: modelCollage
         function onPreviewReady(){
-            console.log("READY")
             img_preview.source = ""
             img_preview.source = modelCollage.getPreviewUrl()
         }

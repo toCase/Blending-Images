@@ -102,8 +102,10 @@ class ProjectModel(QAbstractListModel):
         rows = int(card['rows'])
         columns = int(card['columns'])
 
+        create = True
         if card['id'] > 0:
-            self.db.db_del(0, self.db.TABLE_ITEMS, filter=card['id'])
+            create = False
+            # self.db.db_del(0, self.db.TABLE_ITEMS, filter=card['id'])
 
         #-------
 
@@ -113,18 +115,19 @@ class ProjectModel(QAbstractListModel):
             self.loadModel()            
             project_id = int(res.get('id'))
 
-            # ITEMS GENERATION
-            for r in range(0, rows, 1):
-                for c in range(0, columns, 1):
-                    d = {
-                        'id': 0,
-                        'project':project_id,
-                        'row':r,
-                        'col':c,
-                        'file':0
-                    }
-                    self.db.db_save(d, self.db.TABLE_ITEMS)
-            #------
+            if create:
+                # ITEMS GENERATION
+                for r in range(0, rows, 1):
+                    for c in range(0, columns, 1):
+                        d = {
+                            'id': 0,
+                            'project':project_id,
+                            'row':r,
+                            'col':c,
+                            'file':0
+                        }
+                        self.db.db_save(d, self.db.TABLE_ITEMS)
+                #------
 
             return True
         else:

@@ -303,7 +303,6 @@ class CollageModel(QAbstractTableModel):
             f = self.fw.getPathByURL(self.fw.getProjectDirPath(self.project))
         else:
             f = self.fw.getPathByURL(fname)
-        print(f)
 
         # Создание изображения с использованием Pillow
         image = Image.new('RGB', (self.project_cols * 76, self.project_rows * 85), color=self.project_bg)
