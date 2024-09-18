@@ -305,8 +305,8 @@ Item {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
 
-                    columnSpacing: 2
-                    rowSpacing: 2
+                    columnSpacing: 1
+                    rowSpacing: 1
 
                     model: modelCollage
 
@@ -317,8 +317,8 @@ Item {
                         required property string display
                         required property int idx
 
-                        implicitWidth: 76 + 10
-                        implicitHeight: 85 + 10
+                        implicitWidth: 76 + 4
+                        implicitHeight: 85 + 4
 
                         Image {
                             anchors.centerIn: parent
@@ -346,15 +346,15 @@ Item {
                                 // console.log("Clicked cell: ", modelCollage.data(idx))
                                 // console.log("Clicked row: ", row, " col: ", column)
                                 // modelCollage.setCurrentCell(row, column)
-                                if (mode.checked) {
+                                // if (mode.checked) {
                                     if (currentFile === 0){
                                         modelCollage.setCurrentCell(row, column)
                                     } else {
                                         modelCollage.makeFile(row, column, currentFile)
                                     }
-                                } else {
-                                    modelCollage.makeFile(row, column, 0)
-                                }
+                                // } else {
+                                //     modelCollage.makeFile(row, column, 0)
+                                // }
                             }
                             onDoubleClicked: {
                                 modelCollage.makeFile(row, column, 0)
