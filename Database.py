@@ -43,7 +43,7 @@ class Database(QObject):
     # GENERAL FUNCTION
 
     # получение данных
-    def db_get(self, table: str, filter = None, key = None):
+    def db_get(self, table: str, filter = None, key:str = None):
         db = QSqlDatabase.database(self.connection_name)
         if db.isOpen():
             data = []
@@ -58,7 +58,14 @@ class Database(QObject):
                 WHERE (Files.dir = \'{filter}\') '''
 
                 if key:
-                    qstr = qstr + f"AND (Files.`old` LIKE \'%{key}%\') "
+                    if '+' in key:
+                        key = key.replace("+", "")
+                        qstr = qstr + f"AND (Files.`old` LIKE \'{key.lower()}%\' OR Files.`old` LIKE \'{key.upper()}%\') "
+                    elif '*' in key:
+                        key = key.replace("*", "")
+                        qstr = qstr + f"AND (Files.`old` LIKE \'{key.lower()}%\' OR Files.`old` LIKE \'{key.upper()}%\') "
+                    else:                        
+                        qstr = qstr + f"AND (Files.`old` LIKE \'%{key.lower()}%\' OR Files.`old` LIKE \'%{key.upper()}%\' OR Files.`old` LIKE \'%{key.capitalize()}%\') "
 
                 qstr = qstr + "GROUP BY Files.id, Files.dir, Files.file"
 

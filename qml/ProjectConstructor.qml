@@ -47,92 +47,92 @@ Item {
         anchors.fill: parent
         spacing: 5
 
-        Pane {
-            id: menu
-            Layout.fillWidth: true
-            Layout.minimumHeight: implicitHeight
-            Layout.maximumHeight: implicitHeight
+        // Pane {
+        //     id: menu
+        //     Layout.fillWidth: true
+        //     Layout.minimumHeight: implicitHeight
+        //     Layout.maximumHeight: implicitHeight
 
-            RowLayout {
-                anchors.fill: parent
-                spacing: 10
+        //     RowLayout {
+        //         anchors.fill: parent
+        //         spacing: 10
 
-                Button {
-                    Layout.minimumHeight: implicitHeight
-                    Layout.maximumHeight: implicitHeight
-                    Layout.minimumWidth: implicitWidth
-                    Layout.maximumWidth: implicitWidth
+        //         Button {
+        //             Layout.minimumHeight: implicitHeight
+        //             Layout.maximumHeight: implicitHeight
+        //             Layout.minimumWidth: implicitWidth
+        //             Layout.maximumWidth: implicitWidth
 
-                    text: "< Назад"
+        //             text: "< Назад"
 
-                    Material.background: clr_ORANGE
-                    Material.foreground: clr_DARK
-                    Material.roundedScale: Material.ExtraSmallScale
+        //             Material.background: clr_ORANGE
+        //             Material.foreground: clr_DARK
+        //             Material.roundedScale: Material.ExtraSmallScale
 
-                    onClicked: back()
-                }
-                Button {
-                    Layout.minimumHeight: implicitHeight
-                    Layout.maximumHeight: implicitHeight
-                    Layout.minimumWidth: implicitWidth
-                    Layout.maximumWidth: implicitWidth
+        //             onClicked: back()
+        //         }
+        //         Button {
+        //             Layout.minimumHeight: implicitHeight
+        //             Layout.maximumHeight: implicitHeight
+        //             Layout.minimumWidth: implicitWidth
+        //             Layout.maximumWidth: implicitWidth
 
-                    text: "Подготовка"
+        //             text: "Подготовка"
 
-                    Material.background: clr_ORANGE
-                    Material.foreground: clr_DARK
-                    Material.roundedScale: Material.ExtraSmallScale
+        //             Material.background: clr_ORANGE
+        //             Material.foreground: clr_DARK
+        //             Material.roundedScale: Material.ExtraSmallScale
 
-                    onClicked: internal.makePreview()
-                }
+        //             onClicked: internal.makePreview()
+        //         }
 
-                Item {
-                    Layout.fillWidth: true
-                }
+        //         Item {
+        //             Layout.fillWidth: true
+        //         }
 
-                Label {
-                    Layout.minimumHeight: implicitHeight
-                    Layout.maximumHeight: implicitHeight
-                    Layout.minimumWidth: implicitWidth
-                    Layout.maximumWidth: implicitWidth
-                    text: "Удаление"
-                    horizontalAlignment: Qt.AlignRight
-                    verticalAlignment: Qt.AlignVCenter
-                    color: mode.checked ? clr_DARK : Material.color(Material.Pink)
-                    font.bold: !mode.checked
-                    font.pointSize: mode.checked ? 11 : 13
+        //         Label {
+        //             Layout.minimumHeight: implicitHeight
+        //             Layout.maximumHeight: implicitHeight
+        //             Layout.minimumWidth: implicitWidth
+        //             Layout.maximumWidth: implicitWidth
+        //             text: "Удаление"
+        //             horizontalAlignment: Qt.AlignRight
+        //             verticalAlignment: Qt.AlignVCenter
+        //             color: mode.checked ? clr_DARK : Material.color(Material.Pink)
+        //             font.bold: !mode.checked
+        //             font.pointSize: mode.checked ? 11 : 13
 
-                }
+        //         }
 
-                Switch {
-                    id: mode
-                    Layout.minimumHeight: implicitHeight
-                    Layout.maximumHeight: implicitHeight
-                    Layout.minimumWidth: implicitWidth
-                    Layout.maximumWidth: implicitWidth
-                    checked: true
+        //         Switch {
+        //             id: mode
+        //             Layout.minimumHeight: implicitHeight
+        //             Layout.maximumHeight: implicitHeight
+        //             Layout.minimumWidth: implicitWidth
+        //             Layout.maximumWidth: implicitWidth
+        //             checked: true
 
-                }
-                Label {
-                    Layout.minimumHeight: implicitHeight
-                    Layout.maximumHeight: implicitHeight
-                    Layout.minimumWidth: implicitWidth
-                    Layout.maximumWidth: implicitWidth
-                    text: "Вставка"
-                    horizontalAlignment: Qt.AlignRight
-                    verticalAlignment: Qt.AlignVCenter
-                    color: mode.checked ? Material.color(Material.Green) : clr_DARK
-                    font.bold: mode.checked
-                    font.pointSize: mode.checked ? 13 : 11
+        //         }
+        //         Label {
+        //             Layout.minimumHeight: implicitHeight
+        //             Layout.maximumHeight: implicitHeight
+        //             Layout.minimumWidth: implicitWidth
+        //             Layout.maximumWidth: implicitWidth
+        //             text: "Вставка"
+        //             horizontalAlignment: Qt.AlignRight
+        //             verticalAlignment: Qt.AlignVCenter
+        //             color: mode.checked ? Material.color(Material.Green) : clr_DARK
+        //             font.bold: mode.checked
+        //             font.pointSize: mode.checked ? 13 : 11
 
-                }
-                Item {
-                    Layout.fillWidth: true
-                }
+        //         }
+        //         Item {
+        //             Layout.fillWidth: true
+        //         }
 
 
-            }
-        }
+        //     }
+        // }
 
         Item {
 
@@ -149,6 +149,47 @@ Item {
                     Layout.maximumWidth: parent.width * 0.3
 
                     spacing: 5
+
+                    RowLayout {
+                        anchors.fill: parent
+                        spacing: 10
+
+                        Button {
+                            Layout.minimumHeight: implicitHeight
+                            Layout.maximumHeight: implicitHeight
+                            Layout.minimumWidth: implicitWidth
+                            Layout.maximumWidth: implicitWidth
+
+                            text: "< Назад"
+
+                            Material.background: clr_ORANGE
+                            Material.foreground: clr_DARK
+                            Material.roundedScale: Material.ExtraSmallScale
+
+                            onClicked: back()
+                        }
+                        Button {
+                            Layout.minimumHeight: implicitHeight
+                            Layout.maximumHeight: implicitHeight
+                            Layout.minimumWidth: implicitWidth
+                            Layout.maximumWidth: implicitWidth
+
+                            text: "Подготовка"
+
+                            Material.background: clr_ORANGE
+                            Material.foreground: clr_DARK
+                            Material.roundedScale: Material.ExtraSmallScale
+
+                            onClicked: internal.makePreview()
+                        }
+
+                        Item {
+                            Layout.fillWidth: true
+                        }
+
+                    }
+
+                    
 
                     ComboBox {
                         id: combo_dir
@@ -314,6 +355,9 @@ Item {
                                 } else {
                                     modelCollage.makeFile(row, column, 0)
                                 }
+                            }
+                            onDoubleClicked: {
+                                modelCollage.makeFile(row, column, 0)
                             }
                         }
                     }

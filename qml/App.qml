@@ -3,8 +3,9 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 Pane {
+    id: app
 
-    property int row_HEIGHT: 55
+    property int row_HEIGHT: 40
 
     QtObject{
         id: internal
@@ -42,12 +43,14 @@ Pane {
         anchors.fill: parent
         spacing: 5
 
-        Pane {
+        Rectangle {
             id: top_menu
 
             Layout.fillWidth: true
-            Layout.minimumHeight: implicitHeight
-            Layout.maximumHeight: implicitHeight
+            Layout.minimumHeight: app.row_HEIGHT
+            Layout.maximumHeight: app.row_HEIGHT
+
+            color: "transparent"
 
             RowLayout {
                 anchors.fill: parent
@@ -111,19 +114,6 @@ Pane {
             font.pointSize: 19
         }
     }
-
-    // Base {
-    //     id: base
-    //     visible: false
-    // }
-
-    // Connections{
-    //     target: base
-    //     function onBaseEdit(idx){
-    //         console.info(idx)
-    //         internal.openBaseEditor()
-    //     }
-    // }
 
     Projects {
         id: projects

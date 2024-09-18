@@ -21,5 +21,6 @@ Window {
     App {
         id: app
         anchors.fill: parent
+        verticalPadding: 0
     }
 }
