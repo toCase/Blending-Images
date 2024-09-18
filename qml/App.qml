@@ -61,8 +61,8 @@ Pane {
 
                     Layout.minimumWidth: implicitWidth
                     Layout.maximumWidth: implicitWidth
-                    Layout.minimumHeight: implicitHeight
-                    Layout.maximumHeight: implicitHeight
+                    Layout.minimumHeight: app.row_HEIGHT
+                    Layout.maximumHeight: app.row_HEIGHT
 
                     text: "База"
 
@@ -78,8 +78,8 @@ Pane {
 
                     Layout.minimumWidth: implicitWidth
                     Layout.maximumWidth: implicitWidth
-                    Layout.minimumHeight: implicitHeight
-                    Layout.maximumHeight: implicitHeight
+                    Layout.minimumHeight: app.row_HEIGHT
+                    Layout.maximumHeight: app.row_HEIGHT
 
                     text: "Проекты"
 

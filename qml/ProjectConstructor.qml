@@ -155,8 +155,8 @@ Item {
                         spacing: 10
 
                         Button {
-                            Layout.minimumHeight: implicitHeight
-                            Layout.maximumHeight: implicitHeight
+                            Layout.minimumHeight: row_HEIGHT
+                            Layout.maximumHeight: row_HEIGHT
                             Layout.minimumWidth: implicitWidth
                             Layout.maximumWidth: implicitWidth
 
@@ -169,8 +169,8 @@ Item {
                             onClicked: back()
                         }
                         Button {
-                            Layout.minimumHeight: implicitHeight
-                            Layout.maximumHeight: implicitHeight
+                            Layout.minimumHeight: row_HEIGHT
+                            Layout.maximumHeight: row_HEIGHT
                             Layout.minimumWidth: implicitWidth
                             Layout.maximumWidth: implicitWidth
 
